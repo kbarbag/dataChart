@@ -70,18 +70,18 @@ console.log('spacer: ', spacer);
 let barWidth = (canvas.width / userData.length) - (spacer / 1);
 let chartHeight = maxVal * 1.25;
 
-for (let i = 0; i < userData.length; i++) {
-    let space = spacer / 1; //i > 0 ? spacer / 1 : 0;
-    let user = userData[i];
-    let compareData = user[groupBy];
-    let height = (compareData / chartHeight) * canvas.height;
-    let x = i * (barWidth + space / 2) + ((i + 1) * (space / 2));
-    // if (i === 0) x += space;
-    graph.fillRect(x, canvas.height - height, barWidth, height);
-    let text = graph.measureText(`${compareData}`);
-    // console.log('text metrics: ', text);
-    graph.strokeText(`${compareData}`, (i * (barWidth + spacer) + ((barWidth / 2) - (text.width / 2))), canvas.height - height - 8);
-}
+// for (let i = 0; i < userData.length; i++) {
+//     let space = spacer / 1; //i > 0 ? spacer / 1 : 0;
+//     let user = userData[i];
+//     let compareData = user[groupBy];
+//     let height = (compareData / chartHeight) * canvas.height;
+//     let x = i * (barWidth + space / 2) + ((i + 1) * (space / 2));
+//     // if (i === 0) x += space;
+//     graph.fillRect(x, canvas.height - height, barWidth, height);
+//     let text = graph.measureText(`${compareData}`);
+//     // console.log('text metrics: ', text);
+//     graph.strokeText(`${compareData}`, (i * (barWidth + spacer) + ((barWidth / 2) - (text.width / 2))), canvas.height - height - 8);
+// }
 console.log('maxVal: ', maxVal);
 console.log('window width: ', window.innerWidth);
 console.log('window height: ', window.innerHeight);
@@ -89,3 +89,55 @@ console.log('canvas width: ', canvas.width);
 console.log('canvas height: ', canvas.height);
 console.log('bar width: ', barWidth);
 console.log('chart height: ', chartHeight);
+
+let groupings = {};
+for (let i = 0; i < userData.length; i++) {
+    let user = userData[i];
+    let group = user[groupBy];
+    if (!(group in groupings)) groupings[group] = [];
+    groupings[group].push(user.name);
+}
+console.log(groupings);
+let x = 200, y = 200;
+let radius = 100;
+let startAngle, endAngle;
+// for (let key in groupings) {
+//     console.log('key: ', key);
+// }
+
+let startColor = 0;
+let lastEndAngle = 0;
+let fillColor = '';
+for (let [key, value] of Object.entries(groupings)) {
+    startColor += 1;
+    if (startColor >= 8) startColor = 1;
+    // console.log('key: ', key);
+    // console.log('val: ', value);
+    let bin = startColor.toString(2);
+    bin = '000'.substring(bin.length) + bin;
+    fillColor = '#';
+    for (let i = bin.length - 1; i >= 0; i--) {
+        if (bin.charAt(i) === '1') fillColor += 'f';
+        else fillColor += '0';
+    }
+    console.log('fill color: ', fillColor);
+    graph.fillStyle = fillColor;
+    startAngle = lastEndAngle;
+    let groupCount = value.length;
+    let groupPercent = groupCount / userData.length;
+    // console.log('group: ', groupCount);
+    endAngle = startAngle + ((1 * Math.PI) * ((groupCount / userData.length)));
+    endAngle = (2 * Math.PI) * (270 / 360);
+    endAngle = startAngle + (2 * Math.PI * ((360 - (360 * groupPercent)) / 360));
+    lastEndAngle = endAngle;
+    console.log('start: ', startAngle);
+    console.log('end: ', endAngle);
+    // if (key === '3') {
+    // console.log('hi');
+    graph.beginPath();
+    graph.moveTo(x, y);
+    graph.arc(x, y, radius, startAngle, endAngle, true);
+    graph.closePath();
+    graph.fill();
+    // }
+}
