@@ -1,6 +1,4 @@
-let chance = new Chance();
-let userData = [];
-userData = [{ name: "Fanny Nelson", age: 22, height: 4 },
+let userData = [{ name: "Fanny Nelson", age: 22, height: 4 },
 { name: "Bill Foster", age: 25, height: 7 },
 { name: "Willie Underwood", age: 23, height: 4 },
 { name: "Danny Brady", age: 24, height: 6 },
@@ -11,133 +9,144 @@ userData = [{ name: "Fanny Nelson", age: 22, height: 4 },
 { name: "Mabel Murray", age: 22, height: 5 },
 { name: "Elva Garrett", age: 21, height: 5 }];
 
-// let maxAge = 0;
-// let minAge = Infinity;
-// let maxHeight = 0;
-// let minHeight = Infinity;
+let mouse = { x: 0, y: 0 };
 
-// for (let i = 0; i < 10; i++) {
-//     let data = {
-//         name: chance.name(),
-//         age: chance.integer({ min: 20, max: 25 }),
-//         height: chance.integer({ min: 3, max: 8 })
-//     };
-//     maxAge = Math.max(maxAge, data.age);
-//     minAge = Math.min(minAge, data.age);
-//     maxHeight = Math.max(maxHeight, data.height);
-//     minHeight = Math.min(minHeight, data.height);
-//     userData.push(data);
-// }
 
 let canvas = document.getElementById('graph');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 graph = canvas.getContext('2d');
-graph.strokeStyle = 'green';
-graph.fillStyle = 'cyan';
-graph.font = '1.4em sans-serif';
-// graph.textAlign = 'center';
-// graph.textBaseline = 'middle';
-// graph.strokeRect(100, 100, 50, 50);
-// graph.fillRect(300, 100, 50, 50);
-// graph.strokeRect(298, 98, 54, 54);
-// let spacer = 10;
-// let barWidth = (canvas.width / userData.length) - spacer;
-// let chartHeight = maxHeight * 1.25;
-// console.log(userData);
-// for (let i = 0; i < userData.length; i++) {
-//     let space = i > 0 ? spacer : 0;
-//     let user = userData[i];
-//     let compareData = user.height;
-//     // console.log(user.height);
-//     let height = (compareData / chartHeight) * canvas.height;
-//     console.log('height: ', height);
-//     // graph.fillRect((i * barWidth) + space, canvas.height, barWidth, (user.height / chartHeight) * 100);
-//     graph.fillRect(i * (barWidth + space), canvas.height - height - 1, barWidth, height);
-//     graph.font = '1.4em sans-serif';
-//     let text = graph.measureText(`${compareData}`);
-//     console.log('text metrics: ', text);
-//     graph.strokeText(`${compareData}`, i * (barWidth + space), canvas.height - height - 10);
-// }
-let groupBy = 'height';
-let maxVal, minVal;
-for (let i = 0; i < userData.length; i++) {
-    maxVal = maxVal ? Math.max(maxVal, userData[i][groupBy]) : userData[i][groupBy];
-    minVal = minVal ? Math.min(minVal, userData[i][groupBy]) : userData[i][groupBy];
-}
-let spacer = ((userData.length - 1) / userData.length) * 10;//10;
-console.log('spacer: ', spacer);
-let barWidth = (canvas.width / userData.length) - (spacer / 1);
-let chartHeight = maxVal * 1.25;
 
-// for (let i = 0; i < userData.length; i++) {
-//     let space = spacer / 1; //i > 0 ? spacer / 1 : 0;
-//     let user = userData[i];
-//     let compareData = user[groupBy];
-//     let height = (compareData / chartHeight) * canvas.height;
-//     let x = i * (barWidth + space / 2) + ((i + 1) * (space / 2));
-//     // if (i === 0) x += space;
-//     graph.fillRect(x, canvas.height - height, barWidth, height);
-//     let text = graph.measureText(`${compareData}`);
-//     // console.log('text metrics: ', text);
-//     graph.strokeText(`${compareData}`, (i * (barWidth + spacer) + ((barWidth / 2) - (text.width / 2))), canvas.height - height - 8);
-// }
-console.log('maxVal: ', maxVal);
-console.log('window width: ', window.innerWidth);
-console.log('window height: ', window.innerHeight);
-console.log('canvas width: ', canvas.width);
-console.log('canvas height: ', canvas.height);
-console.log('bar width: ', barWidth);
-console.log('chart height: ', chartHeight);
+let element = document.getElementById('graph');
+var rect = element.getBoundingClientRect();
 
-let groupings = {};
-for (let i = 0; i < userData.length; i++) {
-    let user = userData[i];
-    let group = user[groupBy];
-    if (!(group in groupings)) groupings[group] = [];
-    groupings[group].push(user.name);
-}
-console.log(groupings);
-let x = 200, y = 200;
-let radius = 100;
-let startAngle, endAngle;
-// for (let key in groupings) {
-//     console.log('key: ', key);
-// }
+window.addEventListener('mousemove', function (event) {
+    let scaleX = canvas.width / rect.width,
+        scaleY = canvas.height / rect.height;
+    mouse.x = (event.clientX - rect.left) * scaleX;
+    mouse.y = (event.clientY - rect.top) * scaleY;
+});
 
-let startColor = 0;
-let lastEndAngle = 0;
-let fillColor = '';
-for (let [key, value] of Object.entries(groupings)) {
-    startColor += 1;
-    if (startColor >= 8) startColor = 1;
-    // console.log('key: ', key);
-    // console.log('val: ', value);
-    let bin = startColor.toString(2);
+function cycleHexColor(input) {
+    input += 1;
+    if (input === 7) input = 0;
+    let bin = input.toString(2);
     bin = '000'.substring(bin.length) + bin;
-    fillColor = '#';
-    for (let i = bin.length - 1; i >= 0; i--) {
-        if (bin.charAt(i) === '1') fillColor += 'f';
-        else fillColor += '0';
+    let returnHexColor = '#';
+    for (let i = 0; i < bin.length; i++) {
+        if (bin.charAt(i) === '1') returnHexColor += 'F';
+        else returnHexColor += '0';
     }
-    console.log('fill color: ', fillColor);
-    graph.fillStyle = fillColor;
-    startAngle = lastEndAngle;
-    let groupCount = value.length;
-    let groupPercent = groupCount / userData.length;
-    // console.log('group: ', groupCount);
-    endAngle = startAngle + ((1 * Math.PI) * ((groupCount / userData.length)));
-    endAngle = (2 * Math.PI) * (270 / 360);
-    endAngle = startAngle + (2 * Math.PI * ((360 - (360 * groupPercent)) / 360));
-    lastEndAngle = endAngle;
-    console.log('start: ', startAngle);
-    console.log('end: ', endAngle);
-    // if (key === '3') {
-    // console.log('hi');
-    graph.beginPath();
-    graph.moveTo(x, y);
-    graph.arc(x, y, radius, startAngle, endAngle, true);
-    graph.closePath();
-    graph.fill();
-    // }
+    return { hex: returnHexColor, decimal: input };
 }
+
+function draw() {
+    graph.clearRect(0, 0, window.innerWidth, window.innerHeight);
+    graph.font = '1.4em sans-serif';
+    let groupBy = 'height';
+    let maxVal, minVal;
+    for (let i = 0; i < userData.length; i++) {
+        maxVal = maxVal ? Math.max(maxVal, userData[i][groupBy]) : userData[i][groupBy];
+        minVal = minVal ? Math.min(minVal, userData[i][groupBy]) : userData[i][groupBy];
+    }
+    let spacer = ((userData.length - 1) / userData.length) * 10;
+    let barWidth = (canvas.width / userData.length) - (spacer / 1);
+    let chartHeight = maxVal * 1.25;
+
+    let startColor = 0;
+    let space = spacer;
+    //draw bar graph
+    for (let i = 0; i < userData.length; i++) {
+        let x = Math.floor(i * (barWidth + space / 2) + ((i + 1) * (space / 2)));
+        let user = userData[i];
+        let compareData = user[groupBy];
+        let height = Math.floor((compareData / chartHeight) * canvas.height);
+        let colors = cycleHexColor(startColor);
+        startColor = colors.decimal;
+        let fillColor = colors.hex;
+        let bar = new Bar(x, canvas.height - height, barWidth, height, spacer, `${fillColor}`, `${fillColor}`, user, compareData);
+        bar.draw();
+    }
+
+    let groupings = {};
+    for (let i = 0; i < userData.length; i++) {
+        let user = userData[i];
+        let group = user[groupBy];
+        if (!(group in groupings)) groupings[group] = [];
+        groupings[group].push(user.name);
+    }
+    let x = 200, y = 200;
+    let radius = 100;
+    let startAngle, endAngle;
+
+    gstartColor = 0;
+    let lastEndAngle = 0;
+    let fillColor = '';
+    startColor = 0;
+    //draw pie chart
+    for (let [key, value] of Object.entries(groupings)) {
+        colors = cycleHexColor(startColor);
+        startColor = colors.decimal;
+        fillColor = colors.hex;
+        let groupCount = value.length;
+        let groupPercent = groupCount / userData.length;
+        startAngle = lastEndAngle;
+        endAngle = startAngle + (2 * Math.PI * ((360 - (360 * groupPercent)) / 360));
+        lastEndAngle = endAngle;
+        let arc = new Arc(x, y, radius, startAngle, endAngle, fillColor, fillColor);
+        arc.draw();
+    }
+    window.requestAnimationFrame(draw);
+}
+
+function Bar(x, y, width, height, spacer = 0, fill = '', stroke = '', data, text) {
+    this.x = x;
+    this.y = y;
+    this.width = width;
+    this.height = height;
+    this.spacer = spacer;
+    this.fill = fill;
+    this.stroke = stroke;
+    this.data = data;
+    this.text = text;
+
+    this.draw = function () {
+        let element = document.getElementById('graph-wrapper');
+        let rect = element.getBoundingClientRect();
+        if (mouse.x >= this.x && mouse.x < this.x + this.width && mouse.y > canvas.height - this.height && mouse.y < canvas.height) {
+            graph.fillStyle = 'orange';
+        } else {
+            graph.fillStyle = fill !== '' ? fill : 'cyan';
+        }
+        graph.fillRect(this.x, canvas.height - this.height, this.width, this.height);
+        let textMetrics = graph.measureText(`${text}`);
+        graph.strokeStyle = 'black';
+        graph.fillStyle = 'red';
+        graph.font = '3.9em Arial';
+        graph.color = 'yellow';
+        graph.fillText(`${text}`, ((this.x + this.spacer) + ((this.width / 2) - (textMetrics.width / 2))), canvas.height - this.height - 8);
+    }
+}
+
+function Arc(x, y, radius, startAngle, endAngle, fill = '', stroke = '') {
+    this.x = x;
+    this.y = y;
+    this.radius = radius;
+    this.startAngle = startAngle;
+    this.endAngle = endAngle;
+    this.fill = fill;
+    this.stroke = stroke;
+
+    this.draw = function () {
+        graph.beginPath();
+        graph.fillStyle = this.fill !== '' ? this.fill : 'red';
+        graph.strokeStyle = 'black';
+        graph.moveTo(this.x, this.y);
+        graph.arc(this.x, this.y, this.radius, this.startAngle, this.endAngle, true);
+        graph.closePath();
+        graph.fill();
+        graph.stroke();
+    }
+}
+
+window.requestAnimationFrame(draw);
