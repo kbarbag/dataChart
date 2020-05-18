@@ -42,7 +42,36 @@
     <script>
         let mouse = { x: 0, y: 0 };
     </script>
-    <script type="module" src='./canvas.js'></script>
+    <!-- <script type="module" src='./canvas.js'></script> -->
+    <!-- <script type="module" src="./dataChart.js"></script> -->
+    <script type="module">
+        import DataChart from './canvas.js';
+        // import('./dataChart.js');
+        let userData = [{ name: "Fanny Nelson", age: 22, height: 4 },
+        { name: "Bill Foster", age: 25, height: 7 },
+        { name: "Willie Underwood", age: 23, height: 4 },
+        { name: "Danny Brady", age: 24, height: 6 },
+        { name: "Ricky Williamson", age: 24, height: 4 },
+        { name: "Beulah Brock", age: 23, height: 7 },
+        { name: "Cameron Salazar", age: 23, height: 5 },
+        { name: "Corey Nguyen", age: 20, height: 3 },
+        { name: "Mabel Murray", age: 22, height: 5 },
+        { name: "Elva Garrett", age: 21, height: 5 }];
+        (function () {
+            let myChart = new DataChart(userData, 'graph');
+            // myChart.startDraw();
+            // console.log(myChart);
+            // myChart.draw(window, myChart);
+
+            function drawMe() {
+                myChart.draw();
+                window.requestAnimationFrame(drawMe);
+            }
+            window.requestAnimationFrame(drawMe);
+
+        })();
+
+    </script>
 </body>
 
 </html>
