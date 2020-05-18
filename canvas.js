@@ -64,17 +64,18 @@ function draw() {
     let startColor = 0;
     let space = spacer;
     //draw bar graph
-    for (let i = 0; i < userData.length; i++) {
-        let x = Math.floor(i * (barWidth + space / 2) + ((i + 1) * (space / 2)));
-        let user = userData[i];
-        let compareData = user[groupBy];
-        let height = Math.floor((compareData / chartHeight) * canvas.height);
-        let colors = cycleHexColor(startColor);
-        startColor = colors.decimal;
-        let fillColor = colors.hex;
-        let bar = new Bar(x, canvas.height - height, barWidth, height, spacer, `${fillColor}`, `${fillColor}`, user, compareData);
-        bar.draw();
-    }
+    // for (let i = 0; i < userData.length; i++) {
+    //     let space = spacer / 1; //i > 0 ? spacer / 1 : 0;
+    //     let x = Math.floor(i * (barWidth + space / 2) + ((i + 1) * (space / 2)));
+    //     let user = userData[i];
+    //     let compareData = user[groupBy];
+    //     let height = Math.floor((compareData / chartHeight) * canvas.height);
+    //     let colors = cycleHexColor(startColor);
+    //     startColor = colors.decimal;
+    //     let fillColor = colors.hex;
+    //     let bar = new Bar(x, canvas.height - height, barWidth, height, spacer, `${fillColor}`, `${fillColor}`, user, compareData);
+    //     bar.draw();
+    // }
 
     let groupings = {};
     for (let i = 0; i < userData.length; i++) {
@@ -87,7 +88,7 @@ function draw() {
     let radius = (canvas.height / 2) * 0.8;
     let startAngle = 0, endAngle = 0;
 
-    gstartColor = 0;
+    let lastPercent = 0;
     let fillColor = '';
     startColor = 0;
     //draw pie chart
@@ -97,24 +98,11 @@ function draw() {
         fillColor = colors.hex;
         let groupCount = value.length;
         let groupPercent = groupCount / userData.length;
+        lastPercent += groupPercent;
         startAngle = endAngle;
-        endAngle = startAngle + (2 * Math.PI * (1 - groupPercent));
+        endAngle = 2 * Math.PI * (1 - (lastPercent));
         let arc = new Arc(x, y, radius, startAngle, endAngle, fillColor, fillColor);
         arc.draw();
-    }
-    graph.strokeStyle = 'black';
-    graph.lineWidth = 4;
-    for (let i = 0; i < 4; i++) {
-        graph.beginPath();
-        graph.moveTo(x, y);
-        graph.lineTo(x + radius, y);
-        graph.moveTo(x, y);
-        graph.lineTo(x, y - radius);
-        graph.moveTo(x, y);
-        graph.lineTo(x - radius, y);
-        graph.moveTo(x, y);
-        graph.lineTo(x, y + radius);
-        graph.stroke();
     }
     window.requestAnimationFrame(draw);
 }
@@ -152,7 +140,7 @@ function Arc(x, y, radius, startAngle, endAngle, fill = '', stroke = '') {
     this.x = x;
     this.y = y;
     this.radius = radius;
-    this.startAngle = startAngle;
+    this.startAngle = startAngle === 0 ? 2 * Math.PI : startAngle;
     this.endAngle = endAngle;
     this.fill = fill;
     this.stroke = stroke;
@@ -161,27 +149,17 @@ function Arc(x, y, radius, startAngle, endAngle, fill = '', stroke = '') {
         graph.beginPath();
         graph.fillStyle = this.fill !== '' ? this.fill : 'red';
         graph.strokeStyle = 'black';
-        let angle = -Math.sin(this.endAngle) * this.radius;
-        let x2 = this.x + (Math.cos(this.endAngle) * this.radius);
-        let y2 = this.y + (Math.sin(this.endAngle) * this.radius);
-        let x1 = this.x + (Math.cos(this.startAngle) * this.radius);
-        let y1 = this.y + (Math.sin(this.startAngle) * this.radius);
-        let slope = (this.y - y2) / (x2 - this.x);
-        let slope2 = (-y2 - -this.y) / (x2 - this.x);
-        let slope1 = (-y1 - -this.y) / (x1 - this.x);
-        let b = -this.y - (slope2 * this.x);
-        let full = (2 * Math.PI) * 0.9;
-        console.log(`x: ${this.x}, y: ${this.y}, x1: ${x1}, y1: ${y1}, x2: ${x2}, y2: ${y2}, slope: ${slope}, angle: ${angle}, startAngle: ${this.startAngle}, endAngle: ${this.endAngle}, radius: ${this.radius}, slope2: ${slope2}, slope1: ${slope1}, full: ${full}`);
-        if (this.startAngle === 0) {
-            //mouse over
-            let absPerimY = Math.sqrt((this.radius ** 2) - ((mouse.x - this.x) ** 2));
-            if (mouse.x > this.x && mouse.y < this.y && mouse.y > -1 * (slope2 * mouse.x + b) && mouse.y < this.y + absPerimY && mouse.y > this.y - absPerimY) {
-                graph.fillStyle = 'yellow';
-            }
+        let clickAngle;
+        if (mouse.y < this.y) {
+            clickAngle = ((360 - Math.atan2((this.y - mouse.y), (mouse.x - this.x)) * 180 / Math.PI) / 360) * 2 * Math.PI;
+        } else {
+            clickAngle = ((-Math.atan2((this.y - mouse.y), (mouse.x - this.x)) * 180 / Math.PI) / 360) * 2 * Math.PI;
+        }
 
-            if (mouse.y < this.y + absPerimY && mouse.y > this.y - absPerimY) {
-                if (slope1 >= 0)
-                    graph.fillStyle = 'black';
+        let absPerimY = Math.sqrt((this.radius ** 2) - ((mouse.x - this.x) ** 2));
+        if (mouse.y < this.y + absPerimY && mouse.y > this.y - absPerimY) {
+            if (clickAngle < this.startAngle && clickAngle > this.endAngle) {
+                graph.fillStyle = 'yellow';
             }
         }
         graph.moveTo(this.x, this.y);
