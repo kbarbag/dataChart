@@ -63,17 +63,17 @@ let DataChart = function DataChart(data, graphId) {
         let space = spacer;
         let colors;
         //draw bar graph
-        for (let i = 0; i < this.data.length; i++) {
-            let x = Math.floor(i * (barWidth + space / 2) + ((i + 1) * (space / 2)));
-            let user = this.data[i];
-            let compareData = user[groupBy];
-            let height = Math.floor((compareData / chartHeight) * this.canvas.height);
-            colors = this.cycleHexColor(startColor);
-            startColor = colors.decimal;
-            let fillColor = colors.hex;
-            let bar = new Bar(x, this.canvas.height - height, barWidth, height, spacer, `${fillColor}`, `${fillColor}`, user, compareData, this.graphId);
-            bar.draw();
-        }
+        // for (let i = 0; i < this.data.length; i++) {
+        //     let x = Math.floor(i * (barWidth + space / 2) + ((i + 1) * (space / 2)));
+        //     let user = this.data[i];
+        //     let compareData = user[groupBy];
+        //     let height = Math.floor((compareData / chartHeight) * this.canvas.height);
+        //     colors = this.cycleHexColor(startColor);
+        //     startColor = colors.decimal;
+        //     let fillColor = colors.hex;
+        //     let bar = new Bar(x, this.canvas.height - height, barWidth, height, spacer, `${fillColor}`, `${fillColor}`, user, compareData, this.graphId);
+        //     bar.draw();
+        // }
 
         let groupings = {};
         for (let i = 0; i < this.data.length; i++) {
@@ -83,7 +83,8 @@ let DataChart = function DataChart(data, graphId) {
             groupings[group].push(user.name);
         }
         let x = this.canvas.width / 2, y = this.canvas.height / 2;
-        let radius = (this.canvas.height / 2) * 0.8;
+        let radius = (this.canvas.height / 2) * 0.6;
+        console.log(`radius: ${radius}`);
         let startAngle = 0, endAngle = 0;
 
         let lastPercent = 0;

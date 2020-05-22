@@ -36,20 +36,29 @@ export default class Arc {
         this.graph.fill();
 
         //find center of arc for text
-        let midAngle = (this.startAngle - this.endAngle) / 2;
-        let textX = (this.radius / 2) * (2 * Math.PI * Math.cos(midAngle));
-        let textY = (this.radius / 2) * (2 * Math.PI * Math.sin(midAngle));
-        this.graph.strokeStyle = 'black';
-        this.graph.fillStyle = 'red';
+        this.graph.fillStyle = 'black';
         this.graph.font = '3.9em Courier';
-        this.graph.color = 'yellow';
         let textMetrics = this.graph.measureText(`${this.text}`);
-        // let textX = ((this.x + (this.spacer)) + ((this.width / 2) - (textMetrics.width / 2)));
-        // textX = this.x + (this.width / 2) - (textMetrics.width / 2);
-        // this.graph.fillText(`${this.text}`, textX, canvas.height / 2);
-    }
-
-    sayHi = (val) => {
-        console.log(`saying: ${val}`);
+        let midAngle = this.startAngle - ((this.startAngle - this.endAngle) / 2);
+        let textX = (this.radius * 1.0) * (Math.cos(midAngle));
+        let textY = (this.radius * 1.0) * (Math.sin(midAngle));
+        console.log(`textX: ${textX}, textY: ${textY}, width: ${this.canvas.width}, height: ${this.canvas.height}, startAngle: ${this.startAngle}, endAngle: ${this.endAngle}, midAngle: ${midAngle}, textMetrics: ${textMetrics.width}`);
+        console.log(textMetrics);
+        if (textX > 0 && textY < 0) {
+            //quad 1
+            textX = (this.radius * 1.0) * (Math.cos(midAngle));
+            textY = (this.radius * 1.0) * (Math.sin(midAngle));
+        } else if (textX < 0 && textY > 0) {
+            //quad 3
+            textX = (this.radius * 1.25) * (Math.cos(midAngle));
+            textY = (this.radius * 1.3) * (Math.sin(midAngle));
+        } else {
+            textX = (this.radius * 1.1) * (Math.cos(midAngle));
+            textY = (this.radius * 1.1) * (Math.sin(midAngle));
+        }
+        textX = (this.canvas.width / 2) + textX;
+        textY = (this.canvas.height / 2) + textY;
+        this.graph.fillText(`${this.text}`, textX, textY);
+        console.log(`textX: ${textX}, textY: ${textY}, width: ${this.canvas.width}, height: ${this.canvas.height}, startAngle: ${this.startAngle}, endAngle: ${this.endAngle}, midAngle: ${midAngle}`);
     }
 }
