@@ -91,7 +91,8 @@ graph.prototype.draw = function () {
         groupings[group].push(user.name);
     }
     let x = this.canvas.width / 2, y = this.canvas.height / 2;
-    let radius = (this.canvas.height / 2) * 0.6;
+    let radius = (this.canvas.height / 2) * 0.4;
+    x = radius + 10;
     let startAngle = 0, endAngle = 0;
 
     let lastPercent = 0;
@@ -106,10 +107,10 @@ graph.prototype.draw = function () {
         lastPercent += groupPercent;
         startAngle = endAngle;
         endAngle = 2 * Math.PI * (1 - (lastPercent));
-        let arc = new Arc(x, y, radius, startAngle, endAngle, fillColor, fillColor, `${key}`, this.graphId, mouse);
+        let arc = new Arc({ x, y, radius, startAngle, endAngle, fill: fillColor, stroke: fillColor, text: `${key}`, data: value, graphId: this.graphId, mouse });
         arc.draw();
     }
-    window.requestAnimationFrame(this.draw.bind(this));
+    // window.requestAnimationFrame(this.draw.bind(this));
 }
 
 module.exports = { graph };

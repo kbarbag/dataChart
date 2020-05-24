@@ -1,4 +1,4 @@
-const Arc = function (x, y, radius, startAngle, endAngle, fill = '', stroke = '', text = '', graphId, mouse) {
+const Arc = function ({ x, y, radius, startAngle, endAngle, fill = '', stroke = '', text = '', data, graphId, mouse }) {
     this.x = x;
     this.y = y;
     this.radius = radius;
@@ -7,9 +7,12 @@ const Arc = function (x, y, radius, startAngle, endAngle, fill = '', stroke = ''
     this.fill = fill;
     this.stroke = stroke;
     this.text = text;
+    this.data = data;
     this.canvas = document.getElementById(graphId);
     this.graph = this.canvas.getContext('2d');
     this.mouse = mouse;
+    console.log('data:');
+    console.log(this.data);
     return this;
 }
 
@@ -58,7 +61,7 @@ Arc.prototype.draw = function () {
         textX = (this.radius * 1.1) * (Math.cos(midAngle));
         textY = (this.radius * 1.1) * (Math.sin(midAngle));
     }
-    textX = (this.canvas.width / 2) + textX;
+    textX = this.radius + 50 + textX;
     textY = (this.canvas.height / 2) + textY;
     this.graph.fillText(`${this.text}`, textX, textY);
     // console.log(`textX: ${textX}, textY: ${textY}, width: ${this.canvas.width}, height: ${this.canvas.height}, startAngle: ${this.startAngle}, endAngle: ${this.endAngle}, midAngle: ${midAngle}`);
