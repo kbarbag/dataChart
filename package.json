@@ -1,0 +1,35 @@
+{
+  "name": "datachart",
+  "version": "1.0.0",
+  "description": "A data visualizer that converts data to charts",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "webpack --watch --mode=development",
+    "build": "webpack --mode production",
+    "build2": "webpack"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kbarbag/dataChart.git"
+  },
+  "keywords": [
+    "chart"
+  ],
+  "author": "Keith Barbag",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kbarbag/dataChart/issues"
+  },
+  "homepage": "https://github.com/kbarbag/dataChart#readme",
+  "devDependencies": {
+    "@babel/core": "^7.5.5",
+    "@babel/preset-env": "^7.5.5",
+    "babel-eslint": "^10.0.2",
+    "babel-loader": "^8.0.6",
+    "eslint": "^6.1.0",
+    "jest": "^24.9.0",
+    "webpack": "^4.39.2",
+    "webpack-cli": "^3.3.6"
+  }
+}
