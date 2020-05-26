@@ -1,16 +1,17 @@
 "use strict";
 
-const { Arc, Bar, BarGraph } = require('./models/models.js');
-// const { flatObject, getNextHexColor } = require('./utils/utils.js');
+const { BarGraph, PieChart } = require('./models/models.js');
 const { Utilities } = require('./utils/utils.js');
 
-let mouse = { x: 0, y: 0 };
 let canvas = {};
+let mouse = { x: 0, y: 0 };
+let graphType = { val: 0 };
 let selectedCategory = {};
 let rect = { left: 0, top: 0 };
+let util = new Utilities();
+
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
-let util = new Utilities();
 
 window.addEventListener('mousemove', function (event) {
     let scaleX = canvas.width / rect.width,
@@ -28,10 +29,14 @@ window.addEventListener('click', function (event) {
 });
 
 document.addEventListener('change', function (e) {
-    if (e.target && e.target.id == 'category_select') {
+    if (e.target && e.target.id === 'category_select') {
         console.log('changed values');
         console.log(e.srcElement.value);
         selectedCategory.val = e.srcElement.value;
+    }
+    if (e.target && e.target.id === 'chart_select') {
+        graphType.val = parseInt(e.srcElement.value, 10);
+        console.log(graphType);
     }
 });
 
@@ -63,6 +68,7 @@ let graph = function (data, graphId) {
     this.context = this.canvas.getContext('2d');
     this.rect = this.canvas.getBoundingClientRect();
     this.mouse = mouse;
+    this.graphType = graphType;
     this.selectedCategory = selectedCategory;
     this.categories = new Set();
     privateFlattenArrayOfObjects(this.data, this.categories);
@@ -78,6 +84,12 @@ let graph = function (data, graphId) {
     this.categories.forEach(category => {
         element.add(new Option(`${category}`, `${category}`));
     });
+    parent.insertBefore(element, this.canvas);
+
+    element = document.createElement('select');
+    element.id = 'chart_select';
+    element.add(new Option('Pie Chart', '0'));
+    element.add(new Option('Bar Graph', '1'));
     parent.insertBefore(element, this.canvas);
 
     canvas = this.canvas;
@@ -98,49 +110,18 @@ graph.prototype.draw = function () {
     this.context.clearRect(0, 0, window.innerWidth, window.innerHeight);
     this.context.font = '1.4em sans-serif';
     let groupBy = 'followers_count.$numberInt';
-    let startColor = 0;
-    let colors;
     if (this.selectedCategory.val) {
         groupBy = this.selectedCategory.val;
     }
 
-    let barGraph = new BarGraph(this.data, this.graphId, this.mouse, this.selectedCategory.val);
-    barGraph.draw();
-
-
-    //draw pie chart
-    let groupings = {};
-    for (let i = 0; i < this.data.length; i++) {
-        let user = this.data[i];
-        let group = user[groupBy];
-        let category = '100+';
-        if (group < 100) {
-            category = (Math.floor(group / 10)) * 10;
-            category = category + ' - ' + (category + 10);
-        }
-        if (!(category in groupings)) groupings[category] = [];
-        groupings[category].push(user);
+    if (this.graphType.val === 0) {
+        let pieChart = new PieChart(this.data, this.graphId, this.mouse, this.selectedCategory.val);
+        pieChart.draw();
+    } else if (this.graphType.val === 1) {
+        let barGraph = new BarGraph(this.data, this.graphId, this.mouse, this.selectedCategory.val);
+        barGraph.draw();
     }
-    let x = this.canvas.width / 2, y = this.canvas.height / 2;
-    let radius = (this.canvas.height / 2) * 0.4;
-    x = radius + 50;
-    let startAngle = 0, endAngle = 0;
 
-    let lastPercent = 0;
-    let fillColor = '';
-    startColor = 0;
-    for (let [key, value] of Object.entries(groupings)) {
-        colors = util.getNextHexColor(startColor);
-        startColor = colors.decimal;
-        fillColor = colors.hex;
-        let groupCount = value.length;
-        let groupPercent = groupCount / this.data.length;
-        lastPercent += groupPercent;
-        startAngle = endAngle;
-        endAngle = 2 * Math.PI * (1 - (lastPercent));
-        let arc = new Arc({ x, y, radius, startAngle, endAngle, fill: fillColor, stroke: fillColor, text: `${key}`, data: value, graphId: this.graphId, mouse });
-        arc.draw();
-    }
     window.requestAnimationFrame(this.draw.bind(this));
 }
 
