@@ -1,12 +1,16 @@
 "use strict";
 
-const { Arc, Bar } = require('./models/models.js');
+const { Arc, Bar, BarGraph } = require('./models/models.js');
+// const { flatObject, getNextHexColor } = require('./utils/utils.js');
+const { Utilities } = require('./utils/utils.js');
 
 let mouse = { x: 0, y: 0 };
 let canvas = {};
+let selectedCategory = {};
+let rect = { left: 0, top: 0 };
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
-let rect = { left: 0, top: 0 };
+let util = new Utilities();
 
 window.addEventListener('mousemove', function (event) {
     let scaleX = canvas.width / rect.width,
@@ -23,15 +27,59 @@ window.addEventListener('click', function (event) {
     console.log(`click: x(${x}), y(${y})`);
 });
 
+document.addEventListener('change', function (e) {
+    if (e.target && e.target.id == 'category_select') {
+        console.log('changed values');
+        console.log(e.srcElement.value);
+        selectedCategory.val = e.srcElement.value;
+    }
+});
+
+function privateFlattenArrayOfObjects(arr, set) {
+    if (!arr || typeof arr !== 'object' || !Array.isArray(arr)) return { foo: 'bar' };
+    let flattened;
+    let obj;
+    let keys;
+    for (let i = 0; i < arr.length; i++) {
+        obj = arr[i];
+        flattened = util.flatObjectNumbers(obj, '');
+        arr[i] = flattened;
+        keys = Object.keys(flattened);
+        keys.forEach(key => {
+            set.add(key);
+        });
+    }
+    return arr;
+}
+
+
 let graph = function (data, graphId) {
     this.data = data;
     this.graphId = graphId;
     this.canvas = document.getElementById(this.graphId);
+    let parent = this.canvas.parentElement;
     this.canvas.width = window.innerWidth;
     this.canvas.height = window.innerHeight;
     this.context = this.canvas.getContext('2d');
     this.rect = this.canvas.getBoundingClientRect();
     this.mouse = mouse;
+    this.selectedCategory = selectedCategory;
+    this.categories = new Set();
+    privateFlattenArrayOfObjects(this.data, this.categories);
+
+    //create <SELECT> element to switch between data categories
+    //default option should be first item in list
+    let element = document.createElement('select');
+    element.id = 'category_select';
+    let catItr = this.categories[Symbol.iterator]();
+    this.category = catItr.next().value;
+    this.selectedCategory.val = 'followers_count.$numberInt';
+
+    this.categories.forEach(category => {
+        element.add(new Option(`${category}`, `${category}`));
+    });
+    parent.insertBefore(element, this.canvas);
+
     canvas = this.canvas;
     rect = this.rect;
 
@@ -39,47 +87,25 @@ let graph = function (data, graphId) {
     return this;
 }
 
-graph.prototype.cycleHexColor = function (input) {
-    input += 1;
-    if (input === 7) input = 0;
-    let bin = input.toString(2);
-    bin = '000'.substring(bin.length) + bin;
-    let returnHexColor = '#';
-    for (let i = 0; i < bin.length; i++) {
-        if (bin.charAt(i) === '1') returnHexColor += 'F';
-        else returnHexColor += '0';
-    }
-    return { hex: returnHexColor, decimal: input };
+
+graph.prototype.temp = function () {
+    console.log('i can confirm that i was called');
+    console.log('graphid: ', this.graphId);
+    return this;
 }
 
 graph.prototype.draw = function () {
     this.context.clearRect(0, 0, window.innerWidth, window.innerHeight);
     this.context.font = '1.4em sans-serif';
-    let groupBy = 'height';
+    let groupBy = 'followers_count.$numberInt';
     let startColor = 0;
     let colors;
+    if (this.selectedCategory.val) {
+        groupBy = this.selectedCategory.val;
+    }
 
-    // //draw bar graph
-    // let spacer = ((this.data.length + 10) / this.data.length) * 10;
-    // let barWidth = (this.canvas.width / this.data.length) - (spacer / 1);
-    // let chartHeight = maxVal * 1.25;
-    // let space = spacer;
-    // let maxVal, minVal;
-    // for (let i = 0; i < this.data.length; i++) {
-    //     maxVal = maxVal ? Math.max(maxVal, this.data[i][groupBy]) : this.data[i][groupBy];
-    //     minVal = minVal ? Math.min(minVal, this.data[i][groupBy]) : this.data[i][groupBy];
-    // }
-    // for (let i = 0; i < this.data.length; i++) {
-    //     let x = Math.floor(i * (barWidth + space / 2) + ((i + 1) * (space / 2)));
-    //     let user = this.data[i];
-    //     let compareData = user[groupBy];
-    //     let height = Math.floor((compareData / chartHeight) * this.canvas.height);
-    //     colors = this.cycleHexColor(startColor);
-    //     startColor = colors.decimal;
-    //     let fillColor = colors.hex;
-    //     let bar = new Bar(x, this.canvas.height - height, barWidth, height, spacer, `${fillColor}`, `${fillColor}`, user, compareData, this.graphId, this.mouse);
-    //     bar.draw();
-    // }
+    let barGraph = new BarGraph(this.data, this.graphId, this.mouse, this.selectedCategory.val);
+    barGraph.draw();
 
 
     //draw pie chart
@@ -87,19 +113,24 @@ graph.prototype.draw = function () {
     for (let i = 0; i < this.data.length; i++) {
         let user = this.data[i];
         let group = user[groupBy];
-        if (!(group in groupings)) groupings[group] = [];
-        groupings[group].push(user.name);
+        let category = '100+';
+        if (group < 100) {
+            category = (Math.floor(group / 10)) * 10;
+            category = category + ' - ' + (category + 10);
+        }
+        if (!(category in groupings)) groupings[category] = [];
+        groupings[category].push(user);
     }
     let x = this.canvas.width / 2, y = this.canvas.height / 2;
     let radius = (this.canvas.height / 2) * 0.4;
-    x = radius + 10;
+    x = radius + 50;
     let startAngle = 0, endAngle = 0;
 
     let lastPercent = 0;
     let fillColor = '';
     startColor = 0;
     for (let [key, value] of Object.entries(groupings)) {
-        colors = this.cycleHexColor(startColor);
+        colors = util.getNextHexColor(startColor);
         startColor = colors.decimal;
         fillColor = colors.hex;
         let groupCount = value.length;
@@ -110,7 +141,7 @@ graph.prototype.draw = function () {
         let arc = new Arc({ x, y, radius, startAngle, endAngle, fill: fillColor, stroke: fillColor, text: `${key}`, data: value, graphId: this.graphId, mouse });
         arc.draw();
     }
-    // window.requestAnimationFrame(this.draw.bind(this));
+    window.requestAnimationFrame(this.draw.bind(this));
 }
 
 module.exports = { graph };
