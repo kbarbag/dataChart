@@ -29,8 +29,8 @@ PieChart.prototype.draw = function () {
         groupings[category].push(user);
     }
     let x = this.canvas.width / 2, y = this.canvas.height / 2;
-    let radius = (this.canvas.height / 2) * 0.4;
-    x = radius + 50;
+    let radius = (this.canvas.height / 2) * 0.9;
+    // x = radius + 50;
     let startAngle = 0, endAngle = 0;
 
     let lastPercent = 0;
@@ -46,7 +46,7 @@ PieChart.prototype.draw = function () {
         lastPercent += groupPercent;
         startAngle = endAngle;
         endAngle = 2 * Math.PI * (1 - (lastPercent));
-        let arc = new Arc({ x, y, radius, startAngle, endAngle, fill: fillColor, stroke: fillColor, text: `${key}`, data: value, graphId: this.graphId, mouse });
+        let arc = new Arc({ x, y, radius, startAngle, endAngle, fill: fillColor, stroke: fillColor, text: `${key}`, data: value, graphId: this.graphId, mouse: this.mouse });
         arc.draw();
     }
 }

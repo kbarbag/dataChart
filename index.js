@@ -40,6 +40,34 @@ document.addEventListener('change', function (e) {
     }
 });
 
+// document.addEventListener();
+// Select the node that will be observed for mutations
+const targetNode = document.querySelector('body');
+
+// Options for the observer (which mutations to observe)
+const config = { attributes: true, childList: true, subtree: true };
+
+// Callback function to execute when mutations are observed
+const callback = function (mutationsList, observer) {
+    // Use traditional 'for loops' for IE 11
+    for (let mutation of mutationsList) {
+        if (mutation.type === 'childList') {
+            console.log('A child node has been added or removed.');
+        } else if (mutation.type === 'attributes') {
+            console.log('The ' + mutation.attributeName + ' attribute was modified.');
+        }
+    }
+};
+
+// Create an observer instance linked to the callback function
+const observer = new MutationObserver(callback);
+
+// Start observing the target node for configured mutations
+observer.observe(targetNode, config);
+
+// Later, you can stop observing
+observer.disconnect();
+
 function privateFlattenArrayOfObjects(arr, set) {
     if (!arr || typeof arr !== 'object' || !Array.isArray(arr)) return { foo: 'bar' };
     let flattened;
@@ -47,7 +75,7 @@ function privateFlattenArrayOfObjects(arr, set) {
     let keys;
     for (let i = 0; i < arr.length; i++) {
         obj = arr[i];
-        flattened = util.flatObjectNumbers(obj, '');
+        flattened = util.flatObject(obj, '');
         arr[i] = flattened;
         keys = Object.keys(flattened);
         keys.forEach(key => {
@@ -77,19 +105,24 @@ let graph = function (data, graphId) {
     //default option should be first item in list
     let element = document.createElement('select');
     element.id = 'category_select';
-    let catItr = this.categories[Symbol.iterator]();
-    this.category = catItr.next().value;
+    // let catItr = this.categories[Symbol.iterator]();
+    // this.category = catItr.next().value;
     this.selectedCategory.val = 'followers_count.$numberInt';
 
     this.categories.forEach(category => {
         element.add(new Option(`${category}`, `${category}`));
     });
+    element.value = this.selectedCategory.val;
     parent.insertBefore(element, this.canvas);
 
     element = document.createElement('select');
     element.id = 'chart_select';
     element.add(new Option('Pie Chart', '0'));
     element.add(new Option('Bar Graph', '1'));
+    parent.insertBefore(element, this.canvas);
+
+    element = document.createElement('textarea');
+    element.id = 'hover_data_text';
     parent.insertBefore(element, this.canvas);
 
     canvas = this.canvas;
@@ -107,6 +140,9 @@ graph.prototype.temp = function () {
 }
 
 graph.prototype.draw = function () {
+    this.rect = this.canvas.getBoundingClientRect();
+    rect = this.rect;
+
     this.context.clearRect(0, 0, window.innerWidth, window.innerHeight);
     this.context.font = '1.4em sans-serif';
     let groupBy = 'followers_count.$numberInt';
