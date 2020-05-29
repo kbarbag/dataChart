@@ -24,9 +24,9 @@ Bar.prototype.draw = function () {
     let textMetrics = this.graph.measureText(`${this.text}`);
     // this.graph.strokeStyle = 'black';
     this.graph.fillStyle = 'red';
-    this.graph.font = '3.9em Arial';
+    this.graph.font = '1.5em Arial';
     // this.graph.color = 'yellow';
-    this.graph.fillText(`${this.text}`, ((this.x + this.spacer) + ((this.width / 2) - (textMetrics.width / 2))), this.canvas.height - this.height - 8);
+    this.graph.fillText(`${this.text}`, this.x + (this.width / 2) - (textMetrics.width / 2), this.canvas.height - this.height - 8);
 }
 
 export default Bar;
