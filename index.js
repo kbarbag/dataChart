@@ -98,8 +98,6 @@ let graph = function (data, graphWrapperId) {
 graph.prototype.draw = function () {
     graphWrapperId = `${this.graphWrapperId}`;
     this.canvas = document.getElementById(`${this.graphWrapperId}${Elements.canvas}`);
-    this.canvas.width = window.innerWidth;
-    this.canvas.height = window.innerHeight;
     this.context = this.canvas.getContext('2d');
     this.rect = this.canvas.getBoundingClientRect();
     rect = this.rect;
@@ -115,7 +113,9 @@ graph.prototype.draw = function () {
         let pieChart = new PieChart({ data: this.data, canvasId: `${this.graphWrapperId}${Elements.canvas}`, mouse: this.mouse, selectedCategory: this.selectedCategory, graphWrapperId: this.graphWrapperId })
         pieChart.draw();
     } else if (this.graphType.val === 1) {
-        let barGraph = new BarGraph(this.data, `${this.graphWrapperId}${Elements.canvas}`, this.mouse, this.selectedCategory.val);
+        let summary = document.getElementById(`${this.graphWrapperId}${Elements.summary}`);
+        summary.style = 'opacity: 0';
+        let barGraph = new BarGraph({ data: this.data, canvasId: `${this.graphWrapperId}${Elements.canvas}`, mouse: this.mouse, category: this.selectedCategory.val, graphWrapperId: this.graphWrapperId });
         barGraph.draw();
     }
 

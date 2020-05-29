@@ -17,6 +17,12 @@ StandardView.prototype.create = function () {
     insertElement.appendChild(element);
     insertElement = element;
 
+    //category label
+    element = document.createElement('div');
+    element.classList = 'col-sm-1';
+    element.innerHTML = 'Category Group:';
+    insertElement.appendChild(element);
+
     //category wrapper
     element = document.createElement('div');
     element.id = `${this.graphWrapperId}${Elements.categoryWrapper}`;
@@ -35,9 +41,14 @@ StandardView.prototype.create = function () {
     element.value = this.selectedCategory.val;
     insertElement.appendChild(element);
 
+    //graph type label
+    insertElement = document.getElementById(`${this.graphWrapperId}${Elements.header}`);
+    element = document.createElement('div');
+    element.classList = 'col-sm-1';
+    element.innerHTML = 'Graph Type:';
+    insertElement.appendChild(element);
 
     //graph type wrapper
-    insertElement = document.getElementById(`${this.graphWrapperId}${Elements.header}`);
     element = document.createElement('div');
     element.id = `${this.graphWrapperId}${Elements.graphTypeWrapper}`;
     element.classList = 'col-sm-2';
@@ -52,17 +63,32 @@ StandardView.prototype.create = function () {
     element.add(new Option('Bar Graph', '1'));
     insertElement.appendChild(element);
 
+
     //create 2nd row
     insertElement = this.graphWrapper;
     element = document.createElement('div');
-    element.id = `${this.graphWrapperId}${Elements.graph}`;
+    element.classList = 'row';
+    insertElement.appendChild(element);
+    insertElement = element;
+    element = document.createElement('div');
+    element.id = `${this.graphWrapperId}${Elements.summary}`;
     element.classList = 'col-sm-12';
+    element.style = 'opactiy: 0;';
+    element.innerHTML = '<h1>Summary:</h1>category:<br />group:<br />percent:<br />count:<br />total:<br />';
+    insertElement.appendChild(element);
+
+    //create 3rd row
+    insertElement = this.graphWrapper;
+    element = document.createElement('div');
+    element.id = `${this.graphWrapperId}${Elements.graph}`;
+    element.classList = 'col-sm-10 col-sm-offset-2';
     insertElement.appendChild(element);
     insertElement = element;
 
     element = document.createElement('canvas');
     element.id = `${this.graphWrapperId}${Elements.canvas}`;
-    element.style = 'max-height: 300px;';
+    let graphHeight = window.innerHeight;
+    element.style = 'width: inherit;max-height: ' + graphHeight + 'px;';
     insertElement.appendChild(element);
 
     //create footer
@@ -73,11 +99,12 @@ StandardView.prototype.create = function () {
     insertElement.appendChild(element);
     insertElement = element;
 
+    //create text area
     element = document.createElement('textarea');
     element.id = `${this.graphWrapperId}${Elements.hover_data_text}`;
     element.classList = 'form-control';
     element.setAttribute('readonly', '');
-    element.setAttribute('rows', 20);
+    element.style = `height: 100vh`;
     insertElement.appendChild(element);
 }
 

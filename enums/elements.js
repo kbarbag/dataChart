@@ -7,7 +7,8 @@ const Elements = Object.freeze({
     graphType: '-graph_type',
     hover_data_text: '-hover_data_text',
     categoryWrapper: '-category_wrapper',
-    graphTypeWrapper: '-graph_type_wrapper'
+    graphTypeWrapper: '-graph_type_wrapper',
+    summary: '-summary'
 });
 
 export default Elements;

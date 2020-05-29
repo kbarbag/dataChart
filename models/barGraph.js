@@ -1,11 +1,12 @@
 import Bar from './bar.js';
 import getNextHexColor from '../utils/hexColors.js';
 
-const BarGraph = function (data, canvasId, mouse, category, spacer = 0, fill = '', stroke = '') {
+const BarGraph = function ({ data, canvasId, graphWrapperId, mouse, category, spacer = 0, fill = '', stroke = '' }) {
     this.spacer = spacer;
     this.fill = fill;
     this.stroke = stroke;
     this.data = data;
+    this.graphWrapperId = graphWrapperId;
     this.canvasId = canvasId;
     this.canvas = document.getElementById(this.canvasId);;
     this.graph = this.canvas.getContext('2d');
@@ -45,7 +46,7 @@ BarGraph.prototype.draw = function () {
         colors = getNextHexColor(startColor);
         startColor = colors.decimal;
         let fillColor = colors.hex;
-        let bar = new Bar(x, this.canvas.height - height, barWidth, height, spacer, `${fillColor}`, `${fillColor}`, user, compareData, this.canvasId, this.mouse);
+        let bar = new Bar({ x, y: this.canvas.height - height, width: barWidth, height, spacer, fill: `${fillColor}`, stroke: `${fillColor}`, data: user, text: compareData, canvasId: this.canvasId, mouse: this.mouse, graphWrapperId: this.graphWrapperId });
         bar.draw();
     }
 }

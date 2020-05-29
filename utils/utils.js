@@ -1,7 +1,10 @@
 import flatObject from './flatObject.js';
 import getNextHexColor from './hexColors.js';
+import jsonToHTML from './jsonToHTML.js';
 
 function Utilities() { }
+
+Utilities.prototype.jsonToHTML = jsonToHTML;
 
 Utilities.prototype.getNextHexColor = getNextHexColor;
 

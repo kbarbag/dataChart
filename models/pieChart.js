@@ -38,16 +38,22 @@ PieChart.prototype.draw = function () {
     let fillColor = '';
     let colors;
     let startColor = 0;
+    let summary = {};
     for (let [key, value] of Object.entries(groupings)) {
         colors = getNextHexColor(startColor);
         startColor = colors.decimal;
         fillColor = colors.hex;
         let groupCount = value.length;
         let groupPercent = groupCount / this.data.length;
+        summary.category = this.selectedCategory.val;
+        summary.group = key;
+        summary.percent = (Math.floor(groupPercent * 10000) / 100) + '%';
+        summary.count = groupCount;
+        summary.total = this.data.length;
         lastPercent += groupPercent;
         startAngle = endAngle;
         endAngle = 2 * Math.PI * (1 - (lastPercent));
-        let arc = new Arc({ x, y, radius, startAngle, endAngle, fill: fillColor, stroke: fillColor, text: `${key}`, data: value, canvasId: this.canvasId, mouse: this.mouse, graphWrapperId: this.graphWrapperId });
+        let arc = new Arc({ x, y, radius, startAngle, endAngle, fill: fillColor, stroke: fillColor, text: `${key}`, data: value, canvasId: this.canvasId, mouse: this.mouse, graphWrapperId: this.graphWrapperId, summary });
         arc.draw();
     }
 }
