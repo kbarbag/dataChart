@@ -3,7 +3,7 @@
 const { BarGraph, PieChart } = require('./models/models.js');
 const { Utilities } = require('./utils/utils.js');
 const { Elements } = require('./enums/enums.js');
-const { StandardView } = require('./views/elements.js');
+const { StandardView } = require('./views/views.js');
 
 let canvas = {};
 let mouse = { x: 0, y: 0 };
