@@ -1,4 +1,5 @@
 const getNextHexColor = function (input) {
+    if (input < 0) input = 0;
     input += 1;
     if (input === 7) input = 0;
     let bin = input.toString(2);
