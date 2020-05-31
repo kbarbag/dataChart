@@ -4,7 +4,7 @@
   "description": "A data visualizer that converts data to charts",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "dev": "webpack --watch --mode=development",
     "build": "webpack --mode production",
     "build2": "webpack"
@@ -26,6 +26,7 @@
     "@babel/core": "^7.5.5",
     "@babel/preset-env": "^7.5.5",
     "babel-eslint": "^10.0.2",
+    "babel-jest": "^26.0.1",
     "babel-loader": "^8.0.6",
     "eslint": "^6.1.0",
     "jest": "^24.9.0",
