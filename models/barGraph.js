@@ -46,7 +46,7 @@ BarGraph.prototype.draw = function () {
         colors = getNextHexColor(startColor);
         startColor = colors.decimal;
         let fillColor = colors.hex;
-        let bar = new Bar({ x, y: this.canvas.height - height, width: barWidth, height, spacer, fill: `${fillColor}`, stroke: `${fillColor}`, data: user, text: compareData, canvasId: this.canvasId, mouse: this.mouse, graphWrapperId: this.graphWrapperId });
+        let bar = new Bar({ x, y: this.canvas.height - height, width: barWidth, height, minHeight: 10, spacer, fill: `${fillColor}`, stroke: `${fillColor}`, data: user, text: compareData, canvasId: this.canvasId, mouse: this.mouse, graphWrapperId: this.graphWrapperId });
         bar.draw();
     }
 }
