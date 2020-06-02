@@ -1,17 +1,18 @@
 import Arc from './arc.js';
 import getNextHexColor from '../utils/hexColors.js';
 
-const PieChart = function ({ data, canvasId, mouse, selectedCategory, spacer = 0, fill = '', stroke = '', graphWrapperId }) {
+const PieChart = function ({ data, canvasId, mouse, selectedCategory, spacer = 0, fill = '', stroke = '', graphWrapperId, increments }) {
+    this.data = data;
+    this.canvasId = canvasId;
+    this.mouse = mouse;
+    this.selectedCategory = selectedCategory;
     this.spacer = spacer;
     this.fill = fill;
     this.stroke = stroke;
-    this.data = data;
-    this.canvasId = canvasId;
+    this.graphWrapperId = graphWrapperId;
+    this.increments = increments;
     this.canvas = document.getElementById(this.canvasId);;
     this.graph = this.canvas.getContext('2d');
-    this.mouse = mouse;
-    this.selectedCategory = selectedCategory;
-    this.graphWrapperId = graphWrapperId;
     return this;
 }
 
@@ -22,10 +23,8 @@ PieChart.prototype.draw = function () {
         let user = this.data[i];
         let group = user[this.selectedCategory.val];
         let category = '100+';
-        if (group < 100) {
-            category = (Math.floor(group / 10)) * 10;
-            category = category + ' - ' + (category + 10);
-        }
+        category = (Math.floor(group / this.increments)) * this.increments;
+        category = category + ' - ' + (category + this.increments - 1);
         if (!(category in groupings)) groupings[category] = [];
         groupings[category].push(user);
     }

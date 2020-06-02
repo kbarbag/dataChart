@@ -1,6 +1,6 @@
 const { Elements } = require('../enums/enums.js');
 
-const StandardView = function ({ graphWrapperId, categories, selectedCategory }) {
+const SideBySide = function ({ graphWrapperId, categories, selectedCategory }) {
     this.graphWrapperId = graphWrapperId;
     this.graphWrapper = document.getElementById(this.graphWrapperId);
     this.categories = categories;
@@ -8,7 +8,7 @@ const StandardView = function ({ graphWrapperId, categories, selectedCategory })
     return this;
 }
 
-StandardView.prototype.create = function () {
+SideBySide.prototype.create = function () {
     //create first row (header)
     let insertElement = this.graphWrapper;
     let element = document.createElement('div');
@@ -63,6 +63,28 @@ StandardView.prototype.create = function () {
     element.add(new Option('Bar Graph', '1'));
     insertElement.appendChild(element);
 
+    //increments label
+    insertElement = document.getElementById(`${this.graphWrapperId}${Elements.header}`);
+    element = document.createElement('div');
+    element.classList = 'col-sm-1';
+    element.innerHTML = 'Increments:'
+    insertElement.appendChild(element);
+
+    //increments wrapper
+    element = document.createElement('div');
+    element.classList = 'col-sm-1';
+    insertElement.appendChild(element);
+    insertElement = element;
+
+    //increments field
+    element = document.createElement('input');
+    element.setAttribute('type', 'number');
+    element.setAttribute('min', '1');
+    element.setAttribute('value', 1);
+    element.classList = 'form-control'
+    element.id = `${this.graphWrapperId}${Elements.increments}`;
+    insertElement.appendChild(element);
+
 
     //create 2nd row
     insertElement = this.graphWrapper;
@@ -81,29 +103,24 @@ StandardView.prototype.create = function () {
     insertElement = this.graphWrapper;
     element = document.createElement('div');
     element.classList = 'row';
+    element.id = `${this.graphWrapperId}${Elements.sideBySide}`;
     insertElement.appendChild(element);
     insertElement = element;
     element = document.createElement('div');
     element.id = `${this.graphWrapperId}${Elements.graph}`;
-    element.classList = 'col-sm-10 col-sm-offset-2';
+    element.classList = 'col-sm-6 col-sm-offset-0';
     insertElement.appendChild(element);
     insertElement = element;
 
     element = document.createElement('canvas');
     element.id = `${this.graphWrapperId}${Elements.canvas}`;
-    let graphHeight = window.innerHeight;
-    element.style = 'width: inherit;max-height: ' + graphHeight + 'px;';
     insertElement.appendChild(element);
 
     //create footer
-    insertElement = this.graphWrapper;
-    element = document.createElement('div');
-    element.classList = 'row';
-    insertElement.appendChild(element);
-    insertElement = element;
+    insertElement = document.getElementById(`${this.graphWrapperId}${Elements.sideBySide}`);
     element = document.createElement('div');
     element.id = `${this.graphWrapperId}${Elements.footer}`;
-    element.classList = 'col-sm-12';
+    element.classList = 'col-sm-6';
     insertElement.appendChild(element);
     insertElement = element;
 
@@ -116,4 +133,4 @@ StandardView.prototype.create = function () {
     insertElement.appendChild(element);
 }
 
-export default StandardView;
+export default SideBySide;

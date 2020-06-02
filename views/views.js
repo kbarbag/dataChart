@@ -1,2 +1,3 @@
 import StandardView from "./standard.js";
-export { StandardView };
+import SideBySide from "./sidedBySide.js";
+export { StandardView, SideBySide };

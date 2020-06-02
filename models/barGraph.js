@@ -18,7 +18,8 @@ const BarGraph = function ({ data, canvasId, graphWrapperId, mouse, category, sp
 
 BarGraph.prototype.draw = function () {
     //draw bar graph
-    let spacer = ((this.data.length + 10) / this.data.length) * 10;
+    //use smaller spacer for the side by side view
+    let spacer = 5;//((this.data.length + 10) / this.data.length) * 10;
     let barWidth = (this.canvas.width / this.data.length) - (spacer / 1);
     let space = spacer;
     let maxVal, minVal;

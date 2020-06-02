@@ -30,7 +30,7 @@ Bar.prototype.draw = function () {
     this.graph.fillRect(this.x, this.canvas.height - this.height - this.minHeight, this.width, this.height + this.minHeight);
     let textMetrics = this.graph.measureText(`${this.text}`);
     this.graph.fillStyle = 'red';
-    this.graph.font = '1.5em Arial';
+    this.graph.font = '1.0em Arial';
     this.graph.fillText(`${this.text}`, this.x + (this.width / 2) - (textMetrics.width / 2), this.canvas.height - this.height - this.minHeight - 8);
 }
 
