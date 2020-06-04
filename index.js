@@ -84,9 +84,11 @@ let graph = function (data, graphWrapperId) {
     sideView.create();
 
     this.canvas = document.getElementById(`${this.graphWrapperId}${Elements.canvas}`);
-    let graphWidth = window.innerWidth;
-    this.canvas.width = graphWidth * 0.35;
-    this.canvas.height = graphWidth * 0.35;
+    let canvasWrapper = document.getElementById(`${this.graphWrapperId}${Elements.graph}`);
+    let canvasWrapperStyle = getComputedStyle(canvasWrapper);
+    let canvasWrapperWidth = parseInt(canvasWrapperStyle.width.substring(0, canvasWrapperStyle.width.length - 2), 10) * 0.8;
+    this.canvas.width = canvasWrapperWidth;
+    this.canvas.height = canvasWrapperWidth;
     this.context = this.canvas.getContext('2d');
     this.rect = this.canvas.getBoundingClientRect();
     this.mouse = mouse;
@@ -103,6 +105,12 @@ let graph = function (data, graphWrapperId) {
 
 graph.prototype.draw = function () {
     graphWrapperId = `${this.graphWrapperId}`;
+    let canvasWrapper = document.getElementById(`${this.graphWrapperId}${Elements.graph}`);
+    let canvasWrapperStyle = getComputedStyle(canvasWrapper);
+    let canvasWrapperWidth = parseInt(canvasWrapperStyle.width.substring(0, canvasWrapperStyle.width.length - 2), 10) * 0.8;
+    this.canvas.width = canvasWrapperWidth;
+    this.canvas.height = canvasWrapperWidth;
+
     this.canvas = document.getElementById(`${this.graphWrapperId}${Elements.canvas}`);
     this.context = this.canvas.getContext('2d');
     this.rect = this.canvas.getBoundingClientRect();
