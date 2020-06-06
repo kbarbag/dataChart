@@ -66,12 +66,14 @@ SideBySide.prototype.create = function () {
     //increments label
     insertElement = document.getElementById(`${this.graphWrapperId}${Elements.header}`);
     element = document.createElement('div');
+    element.id = `${this.graphWrapperId}${Elements.incrementsLbl}`
     element.classList = 'col-sm-1';
     element.innerHTML = 'Increments:'
     insertElement.appendChild(element);
 
     //increments wrapper
     element = document.createElement('div');
+    element.id = `${this.graphWrapperId}${Elements.incrementsWrpr}`
     element.classList = 'col-sm-1';
     insertElement.appendChild(element);
     insertElement = element;

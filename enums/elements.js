@@ -11,7 +11,9 @@ const Elements = Object.freeze({
     summary: '-summary',
     standard: '-standard',
     sideBySide: '-side_by_side',
-    increments: '-increments'
+    increments: '-increments',
+    incrementsLbl: '-increments_lbl',
+    incrementsWrpr: '-increments_wrpr'
 });
 
 export default Elements;

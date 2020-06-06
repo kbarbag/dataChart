@@ -124,12 +124,19 @@ graph.prototype.draw = function () {
         groupBy = this.selectedCategory.val;
     }
 
+    let incrementsWrpr = document.getElementById(`${this.graphWrapperId}${Elements.incrementsWrpr}`);
+    let incrementsLbl = document.getElementById(`${this.graphWrapperId}${Elements.incrementsLbl}`);
+
     if (this.graphType.val === 0) {
         let pieChart = new PieChart({ data: this.data, canvasId: `${this.graphWrapperId}${Elements.canvas}`, mouse: this.mouse, selectedCategory: this.selectedCategory, graphWrapperId: this.graphWrapperId, increments: this.increments.val, })
         pieChart.draw();
+        incrementsWrpr.style = 'opacity: 1';
+        incrementsLbl.style = 'opacity: 1';
     } else if (this.graphType.val === 1) {
         let summary = document.getElementById(`${this.graphWrapperId}${Elements.summary}`);
         summary.style = 'opacity: 0';
+        incrementsWrpr.style = 'opacity: 0';
+        incrementsLbl.style = 'opacity: 0';
         let barGraph = new BarGraph({ data: this.data, canvasId: `${this.graphWrapperId}${Elements.canvas}`, mouse: this.mouse, category: this.selectedCategory.val, graphWrapperId: this.graphWrapperId });
         barGraph.draw();
     }
