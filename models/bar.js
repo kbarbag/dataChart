@@ -1,10 +1,11 @@
 const { Elements } = require('../enums/enums.js');
 
-const Bar = function ({ x, y, width, height, minHeight, spacer = 0, fill = '', data, text, canvasId, mouse, graphWrapperId }) {
+const Bar = function ({ x, y, width, height, minHeight, spacer = 0, fill = '', hover, data, text, canvasId, mouse, graphWrapperId }) {
     this.x = x;
     this.y = y;
     this.width = width;
     this.height = height;
+    this.hover = hover;
     this.minHeight = minHeight;
     this.spacer = spacer;
     this.fill = fill;
@@ -19,7 +20,7 @@ const Bar = function ({ x, y, width, height, minHeight, spacer = 0, fill = '', d
 
 Bar.prototype.draw = function () {
     if (this.mouse.x >= this.x && this.mouse.x < this.x + this.width && this.mouse.y > this.y - this.minHeight && this.mouse.y < this.y + this.height + this.minHeight) {
-        this.graph.fillStyle = 'orange';
+        this.graph.fillStyle = this.hover ? this.hover : 'orange';
         let element = document.getElementById(`${this.graphWrapperId}${Elements.hover_data_text}`);
         let text = JSON.stringify(this.data, null, 2);
         element.value = text;

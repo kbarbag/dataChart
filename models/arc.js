@@ -1,7 +1,7 @@
 const { Elements } = require('../enums/enums.js');
 import jsonToHTML from '../utils/jsonToHTML.js';
 
-const Arc = function ({ x, y, radius, startAngle, endAngle, fill = '', stroke = '', text = '', data, canvasId, mouse, graphWrapperId, summary }) {
+const Arc = function ({ x, y, radius, startAngle, endAngle, fill = '', stroke = '', hover = '', text = '', data, canvasId, mouse, graphWrapperId, summary }) {
     this.x = x;
     this.y = y;
     this.radius = radius;
@@ -9,6 +9,7 @@ const Arc = function ({ x, y, radius, startAngle, endAngle, fill = '', stroke = 
     this.endAngle = endAngle;
     this.fill = fill;
     this.stroke = stroke;
+    this.hover = hover;
     this.text = text;
     this.data = data;
     this.canvas = document.getElementById(canvasId);
@@ -33,7 +34,7 @@ Arc.prototype.draw = function () {
     let absPerimY = Math.sqrt(((1 * this.radius) ** 2) - ((this.mouse.x - this.x) ** 2));
     if (this.mouse.y < this.y + absPerimY && this.mouse.y > this.y - absPerimY) {
         if (clickAngle < this.startAngle && clickAngle > this.endAngle) {
-            this.graph.fillStyle = 'yellow';
+            this.graph.fillStyle = this.hover ? this.hover : 'yellow';
             let element = document.getElementById(`${this.graphWrapperId}${Elements.hover_data_text}`);
 
             let text = JSON.stringify(this.data, null, 2);

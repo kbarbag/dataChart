@@ -52,7 +52,7 @@ PieChart.prototype.draw = function () {
         lastPercent += groupPercent;
         startAngle = endAngle;
         endAngle = 2 * Math.PI * (1 - (lastPercent));
-        let arc = new Arc({ x, y, radius, startAngle, endAngle, fill: fillColor, stroke: fillColor, text: `${key}`, data: value, canvasId: this.canvasId, mouse: this.mouse, graphWrapperId: this.graphWrapperId, summary });
+        let arc = new Arc({ x, y, radius, startAngle, endAngle, fill: fillColor, stroke: fillColor, hover: colors.hover, text: `${key}`, data: value, canvasId: this.canvasId, mouse: this.mouse, graphWrapperId: this.graphWrapperId, summary });
         arc.draw();
     }
 }
