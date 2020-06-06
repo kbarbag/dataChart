@@ -33,33 +33,50 @@ BarGraph.prototype.draw = function () {
         maxVal = maxVal ? Math.max(maxVal, this.data[i][this.category]) : this.data[i][this.category];
         minVal = minVal ? Math.min(minVal, this.data[i][this.category]) : this.data[i][this.category];
     }
-    let chartHeight = maxVal * 1.25;
+    //make sure the tallest bar height is 10% smaller than the graph height
+    let chartHeight = maxVal * 1.2;
+
+    //Mage graph background
+    //Left line
     new Line({ x1: this.padding, y1: this.canvas.height, x2: this.padding, y2: 0, stroke: '', canvasId: this.canvasId });
-    new Line({ x1: 0, y1: this.canvas.height - this.padding, x2: this.canvas.width, y2: this.canvas.height - this.padding, stroke: 'red', canvasId: this.canvasId });
+    //Bottom line
+    new Line({ x1: this.padding, y1: this.canvas.height - 1, x2: this.canvas.width, y2: this.canvas.height - 1, stroke: 'red', canvasId: this.canvasId });
+    //Top line
+    new Line({ x1: this.padding, y1: 1, x2: this.canvas.width, y2: 1, stroke: 'black', canvasId: this.canvasId });
+    //Right line
+    new Line({ x1: this.canvas.width - 1, y1: 0, x2: this.canvas.width - 1, y2: this.canvas.height, stroke: 'black', canvasId: this.canvasId });
+    //75% line
     new Line({ x1: this.padding, y1: this.canvas.height * 0.25, x2: this.canvas.width, y2: this.canvas.height * 0.25, stroke: 'blue', canvasId: this.canvasId });
+    //50% line
     new Line({ x1: this.padding, y1: this.canvas.height * 0.5, x2: this.canvas.width, y2: this.canvas.height * 0.5, stroke: 'green', canvasId: this.canvasId });
+    //25% line
     new Line({ x1: this.padding, y1: this.canvas.height * 0.75, x2: this.canvas.width, y2: this.canvas.height * 0.75, stroke: 'orange', canvasId: this.canvasId });
 
-
-    //draw background
-    //get top, left, right, and bottom margins
-    console.log('this.rect: ', this.rect);
-    //create two lines for the x and y with an intersection on the bottom left
-    //create 5 horizontal lines (-1 for the original horizontal line fromt the previous step)
-    //add numbers to the left of the horizontal lines
+    let lineText = '75%';
+    this.graph.fillStyle = 'blue';
+    this.graph.font = '1.0em Arial';
+    let textMetrics = this.graph.measureText(`${lineText}`);
+    this.graph.fillText(`${lineText}`, this.padding - textMetrics.width - 3, this.canvas.height * 0.25);
+    lineText = '50%';
+    this.graph.fillStyle = 'green';
+    this.graph.fillText(`${lineText}`, this.padding - textMetrics.width - 3, this.canvas.height * 0.5);
+    lineText = '25%';
+    this.graph.fillStyle = 'orange';
+    this.graph.fillText(`${lineText}`, this.padding - textMetrics.width - 3, this.canvas.height * 0.75);
 
     //draw each bar
     for (let i = 0; i < this.data.length; i++) {
         let x = Math.floor(i * (barWidth + space / 2) + ((i + 1) * (space / 2))) + this.padding;
         let user = this.data[i];
         let compareData = user[this.category];
-        let height = Math.floor((compareData / chartHeight) * (this.canvas.height - this.padding));
+        let height = Math.floor((compareData / chartHeight) * (this.canvas.height));
         colors = getNextHexColor(startColor);
         startColor = colors.decimal;
         let fillColor = colors.hex;
-        let bar = new Bar({ x, y: this.canvas.height - height - this.padding - 3, width: barWidth, height, minHeight: 10, spacer, fill: `${fillColor}`, hover: colors.hover, data: user, text: compareData, canvasId: this.canvasId, mouse: this.mouse, graphWrapperId: this.graphWrapperId });
+        let bar = new Bar({ x, y: this.canvas.height - height - 3, width: barWidth, height, minHeight: 10, spacer, fill: `${fillColor}`, hover: colors.hover, data: user, text: compareData, canvasId: this.canvasId, mouse: this.mouse, graphWrapperId: this.graphWrapperId });
         bar.draw();
     }
+
 }
 
 export default BarGraph;
