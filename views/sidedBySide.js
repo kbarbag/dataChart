@@ -1,8 +1,8 @@
-import Header from './header.js';
-import Summary from './summary.js';
-import HTMLBuilder from './htmlBuilder.js';
+import Header from './components/header.js';
+import Summary from './components/summary.js';
 
 const { Elements } = require('../enums/enums.js');
+const { HTMLBuilder } = require('../utils/utils.js');
 
 /*
  <div id="graph_wrapper">

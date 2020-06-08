@@ -1,6 +1,5 @@
-import HTMLBuilder from './htmlBuilder.js';
-
-const { Elements } = require('../enums/enums.js');
+const { Elements } = require('../../enums/enums.js');
+const { HTMLBuilder } = require('../../utils/utils.js');
 
 const Summary = function ({ graphWrapperId }) {
     new HTMLBuilder({ id: graphWrapperId })

@@ -1,5 +1,6 @@
 import flatObject from './flatObject.js';
 import getNextHexColor from './hexColors.js';
+import HTMLBuilder from './htmlBuilder.js';
 import jsonToHTML from './jsonToHTML.js';
 
 function Utilities() { }
@@ -22,4 +23,4 @@ Utilities.prototype.flatObjectNumbers = function (obj, stack = '') {
     return returnObj;
 };
 
-export { Utilities }
+export { Utilities, HTMLBuilder }
