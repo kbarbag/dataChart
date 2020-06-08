@@ -17,16 +17,18 @@ const { HTMLBuilder } = require('../utils/utils.js');
  </div> 
  */
 
-const SideBySide = function ({ graphWrapperId, categories, selectedCategory }) {
+const SideBySide = function ({ graphWrapperId, categories, selectedCategory, graphType, viewType }) {
     this.graphWrapperId = graphWrapperId;
     this.graphWrapper = document.getElementById(this.graphWrapperId);
     this.categories = categories;
     this.selectedCategory = selectedCategory;
+    this.graphType = graphType;
+    this.viewType = viewType;
     return this;
 }
 
 SideBySide.prototype.create = function () {
-    new Header({ graphWrapperId: this.graphWrapperId, categories: this.categories, selectedCategory: this.selectedCategory });
+    new Header({ graphWrapperId: this.graphWrapperId, categories: this.categories, selectedCategory: this.selectedCategory, graphType: this.graphType, viewType: this.viewType });
 
     new Summary({ graphWrapperId: this.graphWrapperId });
 

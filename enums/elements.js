@@ -13,7 +13,8 @@ const Elements = Object.freeze({
     sideBySide: '-side_by_side',
     increments: '-increments',
     incrementsLbl: '-increments_lbl',
-    incrementsWrpr: '-increments_wrpr'
+    incrementsWrpr: '-increments_wrpr',
+    viewType: '-view_type'
 });
 
 export default Elements;

@@ -8,6 +8,7 @@ const { StandardView, SideBySide } = require('./views/views.js');
 let canvas = {};
 let mouse = { x: 0, y: 0 };
 let graphType = { val: 0 };
+let viewType = { val: 0, changed: false };
 let selectedCategory = { val: '' };
 let rect = { left: 0, top: 0 };
 let util = new Utilities();
@@ -45,6 +46,10 @@ document.addEventListener('change', function (e) {
     if (e.target && e.target.id === `${graphWrapperId}${Elements.increments}`) {
         increments.val = parseInt(e.srcElement.value, 10);
     }
+    if (e.target && e.target.id === `${graphWrapperId}${Elements.viewType}`) {
+        viewType.val = parseInt(e.srcElement.value, 10);
+        viewType.changed = true;
+    }
 });
 
 function privateFlattenArrayOfObjects(arr, set, onlyNumeric = false) {
@@ -80,8 +85,7 @@ let graph = function (data, graphWrapperId) {
     selectedCategory.val = categoriesIterator.next().value;
     this.graphWrapperId = graphWrapperId;
     this.graphWrapper = document.getElementById(this.graphWrapperId);
-    let sideView = new SideBySide({ graphWrapperId, categories: this.categories, selectedCategory });
-    sideView.create();
+    new SideBySide({ graphWrapperId, categories: this.categories, selectedCategory, viewType: viewType.val }).create();
 
     this.canvas = document.getElementById(`${this.graphWrapperId}${Elements.canvas}`);
     let canvasWrapper = document.getElementById(`${this.graphWrapperId}${Elements.graph}`);
@@ -94,6 +98,7 @@ let graph = function (data, graphWrapperId) {
     this.mouse = mouse;
     this.graphType = graphType;
     this.increments = increments;
+    this.viewType = viewType;
 
 
     canvas = this.canvas;
@@ -105,6 +110,16 @@ let graph = function (data, graphWrapperId) {
 
 graph.prototype.draw = function () {
     graphWrapperId = `${this.graphWrapperId}`;
+    if (this.viewType.changed) {
+        //clear the content before redrawing the new view type
+        document.getElementById(this.graphWrapperId).innerHTML = '';
+        if (this.viewType.val === 0) {
+            new SideBySide({ graphWrapperId: this.graphWrapperId, categories: this.categories, selectedCategory: this.selectedCategory, graphType: this.graphType.val, viewType: this.viewType.val }).create();
+        } else {
+            new StandardView({ graphWrapperId, categories: this.categories, selectedCategory, graphType: this.graphType.val, viewType: this.viewType.val }).create();
+        }
+        this.viewType.changed = false;
+    }
     let canvasWrapper = document.getElementById(`${this.graphWrapperId}${Elements.graph}`);
     let canvasWrapperStyle = getComputedStyle(canvasWrapper);
     let canvasWrapperWidth = parseInt(canvasWrapperStyle.width.substring(0, canvasWrapperStyle.width.length - 2), 10) * 0.8;
@@ -115,14 +130,11 @@ graph.prototype.draw = function () {
     this.context = this.canvas.getContext('2d');
     this.rect = this.canvas.getBoundingClientRect();
     this.increments = increments;
+    canvas = this.canvas;
     rect = this.rect;
 
     this.context.clearRect(0, 0, window.innerWidth, window.innerHeight);
     this.context.font = '1.4em sans-serif';
-    let groupBy = 'followers_count.$numberInt';
-    if (this.selectedCategory.val) {
-        groupBy = this.selectedCategory.val;
-    }
 
     let incrementsWrpr = document.getElementById(`${this.graphWrapperId}${Elements.incrementsWrpr}`);
     let incrementsLbl = document.getElementById(`${this.graphWrapperId}${Elements.incrementsLbl}`);
