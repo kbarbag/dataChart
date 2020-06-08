@@ -11,12 +11,13 @@ class HTMLBuilder {
         this.htmlElement = new HTMLElement(this.id);
     }
 
-    createDiv({ id = '', insertId = '', classes = '', html = '', makeChild = false }) {
+    createDiv({ id = '', insertId = '', classes = '', html = '', style, makeChild = false }) {
         let element = document.createElement('div');
         if (id !== '') element.id = id;
         if (classes !== '') element.classList = classes;
         if (html !== '') element.innerHTML = html;
         if (insertId !== '') this.htmlElement.insertElement = document.getElementById(insertId);
+        if (style !== undefined) element.style = style;
         this.htmlElement.insertElement.appendChild(element);
         if (makeChild) this.htmlElement.insertElement = element;
         return this;
