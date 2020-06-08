@@ -1,14 +1,12 @@
 class HTMLElement {
     constructor(id) {
-        this.id = id;
-        this.insertElement = document.getElementById(this.id);
+        this.element = document.getElementById(id);
     }
 }
 
 class HTMLBuilder {
     constructor({ id }) {
-        this.id = id;
-        this.htmlElement = new HTMLElement(this.id);
+        this.htmlElement = new HTMLElement(id);
     }
 
     createDiv({ id = '', insertId = '', classes = '', html = '', style, makeChild = false }) {
@@ -16,10 +14,10 @@ class HTMLBuilder {
         if (id !== '') element.id = id;
         if (classes !== '') element.classList = classes;
         if (html !== '') element.innerHTML = html;
-        if (insertId !== '') this.htmlElement.insertElement = document.getElementById(insertId);
+        if (insertId !== '') this.htmlElement.element = document.getElementById(insertId);
         if (style !== undefined) element.style = style;
-        this.htmlElement.insertElement.appendChild(element);
-        if (makeChild) this.htmlElement.insertElement = element;
+        this.htmlElement.element.appendChild(element);
+        if (makeChild) this.htmlElement.element = element;
         return this;
     }
 
@@ -35,8 +33,8 @@ class HTMLBuilder {
             element.add(new Option(`${key}`, `${value}`));
         }
         if (selected !== undefined) element.value = selected;
-        if (insertId !== '') this.htmlElement.insertElement = document.getElementById(insertId);
-        this.htmlElement.insertElement.appendChild(element);
+        if (insertId !== '') this.htmlElement.element = document.getElementById(insertId);
+        this.htmlElement.element.appendChild(element);
         return this;
     }
 
@@ -51,7 +49,7 @@ class HTMLBuilder {
             }
         }
         if (style !== undefined) element.style = style;
-        this.htmlElement.insertElement.appendChild(element);
+        this.htmlElement.element.appendChild(element);
         return this;
     }
 }
