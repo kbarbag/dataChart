@@ -26,13 +26,14 @@ class HTMLBuilder {
         return this.createDiv({ id, insertId, classes, html, makeChild: true });
     }
 
-    createSelect({ id = '', insertId = '', classes = '', options }) {
+    createSelect({ id = '', insertId = '', classes = '', options, selected }) {
         let element = document.createElement('select');
         if (id !== '') element.id = id;
         if (classes !== '') element.classList = classes;
         for (let [key, value] of Object.entries(options)) {
             element.add(new Option(`${key}`, `${value}`));
         }
+        if (selected !== undefined) element.value = selected;
         if (insertId !== '') this.htmlElement.insertElement = document.getElementById(insertId);
         this.htmlElement.insertElement.appendChild(element);
         return this;

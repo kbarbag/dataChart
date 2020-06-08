@@ -4,6 +4,19 @@ import HTMLBuilder from './htmlBuilder.js';
 
 const { Elements } = require('../enums/enums.js');
 
+/*
+ <div id="graph_wrapper">
+    <div id="side_by_side" class="row">
+        <div id="graph" class="col-sm-6">
+            <canvas id="canvas"></canvas>
+        </div>
+        <div id="detailed_data" class="col-sm-6">
+            <textarea id="hover_data_text"></textarea>
+        </div>
+    </div>
+ </div> 
+ */
+
 const SideBySide = function ({ graphWrapperId, categories, selectedCategory }) {
     this.graphWrapperId = graphWrapperId;
     this.graphWrapper = document.getElementById(this.graphWrapperId);
@@ -17,18 +30,6 @@ SideBySide.prototype.create = function () {
 
     new Summary({ graphWrapperId: this.graphWrapperId });
 
-    /*
-     <div id="graph_wrapper">
-        <div id="side_by_side" class="row">
-            <div id="graph" class="col-sm-6">
-                <canvas id="canvas"></canvas>
-            </div>
-            <div id="detailed_data" class="col-sm-6">
-                <textarea id="hover_data_text"></textarea>
-            </div>
-        </div>
-     </div> 
-     */
     new HTMLBuilder({ id: this.graphWrapperId })
         .createDivChild({ id: `${this.graphWrapperId}${Elements.sideBySide}`, classes: 'row' })
         .createDivChild({ id: `${this.graphWrapperId}${Elements.graph}`, classes: 'col-sm-6' })

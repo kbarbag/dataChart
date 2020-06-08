@@ -4,6 +4,21 @@ import HTMLBuilder from './htmlBuilder.js';
 
 const { Elements } = require('../enums/enums.js');
 
+/*
+<div id="graph_wrapper">
+    <div class="row">
+        <div id="graph" class="col-sm-10 col-sm-offset-2">
+            <canvas id="canvas"></canvas>
+        </div>
+    </div>
+    <div class="row">
+        <div id="detailed_data" class="col-sm-12">
+            <textarea id="hover_data_text"></textarea>
+        </div>
+    </div>
+</div>
+*/
+
 const StandardView = function ({ graphWrapperId, categories, selectedCategory }) {
     this.graphWrapperId = graphWrapperId;
     this.graphWrapper = document.getElementById(this.graphWrapperId);
@@ -17,20 +32,6 @@ StandardView.prototype.create = function () {
 
     new Summary({ graphWrapperId: this.graphWrapperId });
 
-    /*
-    <div id="graph_wrapper">
-        <div class="row">
-            <div id="graph" class="col-sm-10 col-sm-offset-2">
-                <canvas id="canvas"></canvas>
-            </div>
-        </div>
-        <div class="row">
-            <div id="detailed_data" class="col-sm-12">
-                <textarea id="hover_data_text"></textarea>
-            </div>
-        </div>
-    </div>
-    */
     new HTMLBuilder({ id: this.graphWrapperId })
         .createDivChild({ classes: 'row' })
         .createDivChild({ id: `${this.graphWrapperId}${Elements.graph}`, classes: 'col-sm-10 col-sm-offset-2' })
