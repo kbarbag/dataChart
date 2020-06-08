@@ -1,3 +1,7 @@
+import Header from './header.js';
+import Summary from './summary.js';
+import HTMLBuilder from './htmlBuilder.js';
+
 const { Elements } = require('../enums/enums.js');
 
 const StandardView = function ({ graphWrapperId, categories, selectedCategory }) {
@@ -9,111 +13,32 @@ const StandardView = function ({ graphWrapperId, categories, selectedCategory })
 }
 
 StandardView.prototype.create = function () {
-    //create first row (header)
-    let insertElement = this.graphWrapper;
-    let element = document.createElement('div');
-    element.classList = 'row'
-    element.id = `${this.graphWrapperId}${Elements.header}`;
-    insertElement.appendChild(element);
-    insertElement = element;
+    new Header({ graphWrapperId: this.graphWrapperId, categories: this.categories, selectedCategory: this.selectedCategory });
 
-    //category label
-    element = document.createElement('div');
-    element.classList = 'col-sm-1';
-    element.innerHTML = 'Category Group:';
-    insertElement.appendChild(element);
+    new Summary({ graphWrapperId: this.graphWrapperId });
 
-    //category wrapper
-    element = document.createElement('div');
-    element.id = `${this.graphWrapperId}${Elements.categoryWrapper}`;
-    element.classList = 'col-sm-3';
-    insertElement.appendChild(element);
-    insertElement = element;
-
-    //category select
-    element = document.createElement('select');
-    element.id = `${this.graphWrapperId}${Elements.categorySelect}`;
-    element.classList = 'form-control';
-
-    this.categories.forEach(category => {
-        element.add(new Option(`${category}`, `${category}`));
-    });
-    element.value = this.selectedCategory.val;
-    insertElement.appendChild(element);
-
-    //graph type label
-    insertElement = document.getElementById(`${this.graphWrapperId}${Elements.header}`);
-    element = document.createElement('div');
-    element.classList = 'col-sm-1';
-    element.innerHTML = 'Graph Type:';
-    insertElement.appendChild(element);
-
-    //graph type wrapper
-    element = document.createElement('div');
-    element.id = `${this.graphWrapperId}${Elements.graphTypeWrapper}`;
-    element.classList = 'col-sm-2';
-    insertElement.appendChild(element);
-    insertElement = element;
-
-    //graph type select
-    element = document.createElement('select');
-    element.id = `${this.graphWrapperId}${Elements.graphType}`;
-    element.classList = 'form-control';
-    element.add(new Option('Pie Chart', '0'));
-    element.add(new Option('Bar Graph', '1'));
-    insertElement.appendChild(element);
-
-
-    //create 2nd row
-    insertElement = this.graphWrapper;
-    element = document.createElement('div');
-    element.classList = 'row';
-    insertElement.appendChild(element);
-    insertElement = element;
-    element = document.createElement('div');
-    element.id = `${this.graphWrapperId}${Elements.summary}`;
-    element.classList = 'col-sm-12';
-    element.style = 'opactiy: 0;';
-    element.innerHTML = '<h1>Summary:</h1>category:<br />group:<br />percent:<br />count:<br />total:<br />';
-    insertElement.appendChild(element);
-
-    //create 3rd row
-    insertElement = this.graphWrapper;
-    element = document.createElement('div');
-    element.classList = 'row';
-    insertElement.appendChild(element);
-    insertElement = element;
-    element = document.createElement('div');
-    element.id = `${this.graphWrapperId}${Elements.graph}`;
-    element.classList = 'col-sm-10 col-sm-offset-2';
-    insertElement.appendChild(element);
-    insertElement = element;
-
-    element = document.createElement('canvas');
-    element.id = `${this.graphWrapperId}${Elements.canvas}`;
-    let graphHeight = window.innerHeight;
-    element.style = 'width: inherit;max-height: ' + graphHeight + 'px;';
-    insertElement.appendChild(element);
-
-    //create footer
-    insertElement = this.graphWrapper;
-    element = document.createElement('div');
-    element.classList = 'row';
-    insertElement.appendChild(element);
-    insertElement = element;
-    element = document.createElement('div');
-    element.id = `${this.graphWrapperId}${Elements.footer}`;
-    element.classList = 'col-sm-12';
-    insertElement.appendChild(element);
-    insertElement = element;
-
-    //create text area
-    element = document.createElement('textarea');
-    element.id = `${this.graphWrapperId}${Elements.hover_data_text}`;
-    element.classList = 'form-control';
-    element.setAttribute('readonly', '');
-    element.style = `height: 100vh`;
-    insertElement.appendChild(element);
+    /*
+    <div id="graph_wrapper">
+        <div class="row">
+            <div id="graph" class="col-sm-10 col-sm-offset-2">
+                <canvas id="canvas"></canvas>
+            </div>
+        </div>
+        <div class="row">
+            <div id="detailed_data" class="col-sm-12">
+                <textarea id="hover_data_text"></textarea>
+            </div>
+        </div>
+    </div>
+    */
+    new HTMLBuilder({ id: this.graphWrapperId })
+        .createDivChild({ classes: 'row' })
+        .createDivChild({ id: `${this.graphWrapperId}${Elements.graph}`, classes: 'col-sm-10 col-sm-offset-2' })
+        .createElement({ id: `${this.graphWrapperId}${Elements.canvas}`, elementName: 'canvas' })
+        .createDivChild({ insertId: this.graphWrapperId, classes: 'row' })
+        .createDivChild({ id: `${this.graphWrapperId}${Elements.detailedData}`, classes: 'col-sm-12' })
+        .createElement({ id: `${this.graphWrapperId}${Elements.hover_data_text}`, classes: 'form-control', elementName: 'textarea', attrs: { 'readonly': '' }, style: 'height: 100vh;' });
+    return;
 }
 
 export default StandardView;

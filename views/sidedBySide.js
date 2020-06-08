@@ -1,5 +1,6 @@
 import Header from './header.js';
 import Summary from './summary.js';
+import HTMLBuilder from './htmlBuilder.js';
 
 const { Elements } = require('../enums/enums.js');
 
@@ -14,42 +15,28 @@ const SideBySide = function ({ graphWrapperId, categories, selectedCategory }) {
 SideBySide.prototype.create = function () {
     new Header({ graphWrapperId: this.graphWrapperId, categories: this.categories, selectedCategory: this.selectedCategory });
 
-
-    //create 2nd row
     new Summary({ graphWrapperId: this.graphWrapperId });
 
-    //create 3rd row
-    let insertElement = this.graphWrapper;
-    let element = document.createElement('div');
-    element.classList = 'row';
-    element.id = `${this.graphWrapperId}${Elements.sideBySide}`;
-    insertElement.appendChild(element);
-    insertElement = element;
-    element = document.createElement('div');
-    element.id = `${this.graphWrapperId}${Elements.graph}`;
-    element.classList = 'col-sm-6 col-sm-offset-0';
-    insertElement.appendChild(element);
-    insertElement = element;
+    /*
+     <div id="graph_wrapper">
+        <div id="side_by_side" class="row">
+            <div id="graph" class="col-sm-6">
+                <canvas id="canvas"></canvas>
+            </div>
+            <div id="detailed_data" class="col-sm-6">
+                <textarea id="hover_data_text"></textarea>
+            </div>
+        </div>
+     </div> 
+     */
+    new HTMLBuilder({ id: this.graphWrapperId })
+        .createDivChild({ id: `${this.graphWrapperId}${Elements.sideBySide}`, classes: 'row' })
+        .createDivChild({ id: `${this.graphWrapperId}${Elements.graph}`, classes: 'col-sm-6' })
+        .createElement({ id: `${this.graphWrapperId}${Elements.canvas}`, elementName: 'canvas' })
+        .createDivChild({ id: `${this.graphWrapperId}${Elements.detailedData}`, insertId: `${this.graphWrapperId}${Elements.sideBySide}`, classes: 'col-sm-6' })
+        .createElement({ id: `${this.graphWrapperId}${Elements.hover_data_text}`, elementName: 'textarea', classes: 'form-control', attrs: { 'readonly': '' }, style: 'height:100vh;' });
 
-    element = document.createElement('canvas');
-    element.id = `${this.graphWrapperId}${Elements.canvas}`;
-    insertElement.appendChild(element);
-
-    //create footer
-    insertElement = document.getElementById(`${this.graphWrapperId}${Elements.sideBySide}`);
-    element = document.createElement('div');
-    element.id = `${this.graphWrapperId}${Elements.footer}`;
-    element.classList = 'col-sm-6';
-    insertElement.appendChild(element);
-    insertElement = element;
-
-    //create text area
-    element = document.createElement('textarea');
-    element.id = `${this.graphWrapperId}${Elements.hover_data_text}`;
-    element.classList = 'form-control';
-    element.setAttribute('readonly', '');
-    element.style = `height: 100vh`;
-    insertElement.appendChild(element);
+    return;
 }
 
 export default SideBySide;

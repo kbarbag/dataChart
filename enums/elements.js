@@ -1,6 +1,6 @@
 const Elements = Object.freeze({
     header: '-header',
-    footer: '-footer',
+    detailedData: '-detailed_data',
     graph: '-graph',
     canvas: '-canvas',
     categorySelect: '-category_select',
