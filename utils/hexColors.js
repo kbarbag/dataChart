@@ -12,8 +12,8 @@ const getNextHexColor = function (input) {
             hover += 'F';
         }
         else {
-            returnHexColor += '8';
-            hover += '0';
+            returnHexColor += '0';
+            hover += '8';
         }
     }
     return { hex: returnHexColor, decimal: input, hover };

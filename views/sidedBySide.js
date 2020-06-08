@@ -1,4 +1,6 @@
 import Header from './header.js';
+import Summary from './summary.js';
+
 const { Elements } = require('../enums/enums.js');
 
 const SideBySide = function ({ graphWrapperId, categories, selectedCategory }) {
@@ -14,21 +16,11 @@ SideBySide.prototype.create = function () {
 
 
     //create 2nd row
-    let insertElement = this.graphWrapper;
-    let element = document.createElement('div');
-    element.classList = 'row';
-    insertElement.appendChild(element);
-    insertElement = element;
-    element = document.createElement('div');
-    element.id = `${this.graphWrapperId}${Elements.summary}`;
-    element.classList = 'col-sm-12';
-    element.style = 'opactiy: 0;';
-    element.innerHTML = '<h1>Summary:</h1>category:<br />group:<br />percent:<br />count:<br />total:<br />';
-    insertElement.appendChild(element);
+    new Summary({ graphWrapperId: this.graphWrapperId });
 
     //create 3rd row
-    insertElement = this.graphWrapper;
-    element = document.createElement('div');
+    let insertElement = this.graphWrapper;
+    let element = document.createElement('div');
     element.classList = 'row';
     element.id = `${this.graphWrapperId}${Elements.sideBySide}`;
     insertElement.appendChild(element);
