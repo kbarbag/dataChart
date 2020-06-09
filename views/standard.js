@@ -19,28 +19,24 @@ const { HTMLBuilder } = require('../utils/utils.js');
 </div>
 */
 
-const StandardView = function ({ graphWrapperId, categories, selectedCategory, graphType, viewType }) {
-    this.graphWrapperId = graphWrapperId;
-    this.graphWrapper = document.getElementById(this.graphWrapperId);
+const StandardView = function ({ categories }) {
+    this.graphWrapper = document.getElementById(window.dataChartGraphWrapperId);
     this.categories = categories;
-    this.selectedCategory = selectedCategory;
-    this.graphType = graphType;
-    this.viewType = viewType;
     return this;
 }
 
 StandardView.prototype.create = function () {
-    new Header({ graphWrapperId: this.graphWrapperId, categories: this.categories, selectedCategory: this.selectedCategory, graphType: this.graphType, viewType: this.viewType });
+    new Header({ categories: this.categories });
 
-    new Summary({ graphWrapperId: this.graphWrapperId });
+    new Summary();
 
-    new HTMLBuilder({ id: this.graphWrapperId })
+    new HTMLBuilder({ id: window.dataChartGraphWrapperId })
         .createDivChild({ classes: 'row' })
-        .createDivChild({ id: `${this.graphWrapperId}${Elements.graph}`, classes: 'col-sm-10 col-sm-offset-2' })
-        .createElement({ id: `${this.graphWrapperId}${Elements.canvas}`, elementName: 'canvas' })
-        .createDivChild({ insertId: this.graphWrapperId, classes: 'row' })
-        .createDivChild({ id: `${this.graphWrapperId}${Elements.detailedData}`, classes: 'col-sm-12' })
-        .createElement({ id: `${this.graphWrapperId}${Elements.hover_data_text}`, classes: 'form-control', elementName: 'textarea', attrs: { 'readonly': '' }, style: 'height: 100vh;' });
+        .createDivChild({ id: `${window.dataChartGraphWrapperId}${Elements.graph}`, classes: 'col-sm-10 col-sm-offset-2' })
+        .createElement({ id: `${window.dataChartGraphWrapperId}${Elements.canvas}`, elementName: 'canvas' })
+        .createDivChild({ insertId: window.dataChartGraphWrapperId, classes: 'row' })
+        .createDivChild({ id: `${window.dataChartGraphWrapperId}${Elements.detailedData}`, classes: 'col-sm-12' })
+        .createElement({ id: `${window.dataChartGraphWrapperId}${Elements.hover_data_text}`, classes: 'form-control', elementName: 'textarea', attrs: { 'readonly': '' }, style: 'height: 100vh;' });
     return;
 }
 

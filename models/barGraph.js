@@ -2,78 +2,68 @@ import Bar from './bar.js';
 import Line from './line.js';
 
 import getNextHexColor from '../utils/hexColors.js';
-import { Elements } from '../enums/enums.js';
 
-const BarGraph = function ({ data, canvasId, graphWrapperId, mouse, category, spacer = 0, fill = '', stroke = '' }) {
+const BarGraph = function ({ data, spacer = 0, fill = '', stroke = '' }) {
     this.spacer = spacer;
     this.fill = fill;
     this.stroke = stroke;
     this.data = data;
-    this.graphWrapperId = graphWrapperId;
-    this.canvasId = canvasId;
-    this.canvas = document.getElementById(this.canvasId);;
-    this.graph = this.canvas.getContext('2d');
-    this.rect = this.canvas.getBoundingClientRect();
-    this.mouse = mouse;
-    this.category = category;
     this.padding = 30;
     return this;
 }
 
 BarGraph.prototype.draw = function () {
     //draw bar graph
-    //use smaller spacer for the side by side view
-    let spacer = 5;//((this.data.length + 10) / this.data.length) * 10;
-    let barWidth = ((this.canvas.width - this.padding) / this.data.length) - (spacer / 1);
+    let spacer = 5;
+    let barWidth = ((window.dataChartCanvas.width - this.padding) / this.data.length) - (spacer / 1);
     let space = spacer;
     let maxVal, minVal;
     let colors;
     let startColor = 0;
     for (let i = 0; i < this.data.length; i++) {
-        maxVal = maxVal ? Math.max(maxVal, this.data[i][this.category]) : this.data[i][this.category];
-        minVal = minVal ? Math.min(minVal, this.data[i][this.category]) : this.data[i][this.category];
+        maxVal = maxVal ? Math.max(maxVal, this.data[i][window.dataChartSelectedCategory]) : this.data[i][window.dataChartSelectedCategory];
+        minVal = minVal ? Math.min(minVal, this.data[i][window.dataChartSelectedCategory]) : this.data[i][window.dataChartSelectedCategory];
     }
     //make sure the tallest bar height is 10% smaller than the graph height
     let chartHeight = maxVal * 1.2;
 
-    //Mage graph background
+    //Make graph background
     //Left line
-    new Line({ x1: this.padding, y1: this.canvas.height, x2: this.padding, y2: 0, stroke: '', canvasId: this.canvasId });
+    new Line({ x1: this.padding, y1: window.dataChartCanvas.height, x2: this.padding, y2: 0, stroke: '' });
     //Bottom line
-    new Line({ x1: this.padding, y1: this.canvas.height - 1, x2: this.canvas.width, y2: this.canvas.height - 1, stroke: 'red', canvasId: this.canvasId });
+    new Line({ x1: this.padding, y1: window.dataChartCanvas.height - 1, x2: window.dataChartCanvas.width, y2: window.dataChartCanvas.height - 1, stroke: 'red' });
     //Top line
-    new Line({ x1: this.padding, y1: 1, x2: this.canvas.width, y2: 1, stroke: 'black', canvasId: this.canvasId });
+    new Line({ x1: this.padding, y1: 1, x2: window.dataChartCanvas.width, y2: 1, stroke: 'black' });
     //Right line
-    new Line({ x1: this.canvas.width - 1, y1: 0, x2: this.canvas.width - 1, y2: this.canvas.height, stroke: 'black', canvasId: this.canvasId });
+    new Line({ x1: window.dataChartCanvas.width - 1, y1: 0, x2: window.dataChartCanvas.width - 1, y2: window.dataChartCanvas.height, stroke: 'black' });
     //75% line
-    new Line({ x1: this.padding, y1: this.canvas.height * 0.25, x2: this.canvas.width, y2: this.canvas.height * 0.25, stroke: 'blue', canvasId: this.canvasId });
+    new Line({ x1: this.padding, y1: window.dataChartCanvas.height * 0.25, x2: window.dataChartCanvas.width, y2: window.dataChartCanvas.height * 0.25, stroke: 'blue' });
     //50% line
-    new Line({ x1: this.padding, y1: this.canvas.height * 0.5, x2: this.canvas.width, y2: this.canvas.height * 0.5, stroke: 'green', canvasId: this.canvasId });
+    new Line({ x1: this.padding, y1: window.dataChartCanvas.height * 0.5, x2: window.dataChartCanvas.width, y2: window.dataChartCanvas.height * 0.5, stroke: 'green' });
     //25% line
-    new Line({ x1: this.padding, y1: this.canvas.height * 0.75, x2: this.canvas.width, y2: this.canvas.height * 0.75, stroke: 'orange', canvasId: this.canvasId });
+    new Line({ x1: this.padding, y1: window.dataChartCanvas.height * 0.75, x2: window.dataChartCanvas.width, y2: window.dataChartCanvas.height * 0.75, stroke: 'orange' });
 
     let lineText = '75%';
-    this.graph.fillStyle = 'blue';
-    this.graph.font = '1.0em Arial';
-    let textMetrics = this.graph.measureText(`${lineText}`);
-    this.graph.fillText(`${lineText}`, this.padding - textMetrics.width - 3, this.canvas.height * 0.25);
+    window.dataChartGraph.fillStyle = 'blue';
+    window.dataChartGraph.font = '1.0em Arial';
+    let textMetrics = window.dataChartGraph.measureText(`${lineText}`);
+    window.dataChartGraph.fillText(`${lineText}`, this.padding - textMetrics.width - 3, window.dataChartCanvas.height * 0.25);
     lineText = '50%';
-    this.graph.fillStyle = 'green';
-    this.graph.fillText(`${lineText}`, this.padding - textMetrics.width - 3, this.canvas.height * 0.5);
+    window.dataChartGraph.fillStyle = 'green';
+    window.dataChartGraph.fillText(`${lineText}`, this.padding - textMetrics.width - 3, window.dataChartCanvas.height * 0.5);
     lineText = '25%';
-    this.graph.fillStyle = 'orange';
-    this.graph.fillText(`${lineText}`, this.padding - textMetrics.width - 3, this.canvas.height * 0.75);
+    window.dataChartGraph.fillStyle = 'orange';
+    window.dataChartGraph.fillText(`${lineText}`, this.padding - textMetrics.width - 3, window.dataChartCanvas.height * 0.75);
 
     //draw each bar
     for (let i = 0; i < this.data.length; i++) {
         let x = Math.floor(i * (barWidth + space / 2) + ((i + 1) * (space / 2))) + this.padding;
         let user = this.data[i];
-        let compareData = user[this.category];
-        let height = Math.floor((compareData / chartHeight) * (this.canvas.height));
+        let compareData = user[window.dataChartSelectedCategory];
+        let height = Math.floor((compareData / chartHeight) * (window.dataChartCanvas.height));
         colors = getNextHexColor(startColor);
         startColor = colors.decimal;
-        let fillColor = colors.hex;
-        let bar = new Bar({ x, y: this.canvas.height - height - 3, width: barWidth, height, minHeight: 10, spacer, fill: `${fillColor}`, hover: colors.hover, data: user, text: compareData, canvasId: this.canvasId, mouse: this.mouse, graphWrapperId: this.graphWrapperId });
+        let bar = new Bar({ x, y: window.dataChartCanvas.height - height - 3, width: barWidth, height, minHeight: 10, spacer, fillColor: colors.hex, hoverColor: colors.hover, data: user, text: compareData });
         bar.draw();
     }
 

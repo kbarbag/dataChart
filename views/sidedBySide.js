@@ -17,27 +17,23 @@ const { HTMLBuilder } = require('../utils/utils.js');
  </div> 
  */
 
-const SideBySide = function ({ graphWrapperId, categories, selectedCategory, graphType, viewType }) {
-    this.graphWrapperId = graphWrapperId;
-    this.graphWrapper = document.getElementById(this.graphWrapperId);
+const SideBySide = function ({ categories }) {
+    this.graphWrapper = document.getElementById(window.dataChartGraphWrapperId);
     this.categories = categories;
-    this.selectedCategory = selectedCategory;
-    this.graphType = graphType;
-    this.viewType = viewType;
     return this;
 }
 
 SideBySide.prototype.create = function () {
-    new Header({ graphWrapperId: this.graphWrapperId, categories: this.categories, selectedCategory: this.selectedCategory, graphType: this.graphType, viewType: this.viewType });
+    new Header({ categories: this.categories });
 
-    new Summary({ graphWrapperId: this.graphWrapperId });
+    new Summary();
 
-    new HTMLBuilder({ id: this.graphWrapperId })
-        .createDivChild({ id: `${this.graphWrapperId}${Elements.sideBySide}`, classes: 'row' })
-        .createDivChild({ id: `${this.graphWrapperId}${Elements.graph}`, classes: 'col-sm-6' })
-        .createElement({ id: `${this.graphWrapperId}${Elements.canvas}`, elementName: 'canvas' })
-        .createDivChild({ id: `${this.graphWrapperId}${Elements.detailedData}`, insertId: `${this.graphWrapperId}${Elements.sideBySide}`, classes: 'col-sm-6' })
-        .createElement({ id: `${this.graphWrapperId}${Elements.hover_data_text}`, elementName: 'textarea', classes: 'form-control', attrs: { 'readonly': '' }, style: 'height:100vh;' });
+    new HTMLBuilder({ id: window.dataChartGraphWrapperId })
+        .createDivChild({ id: `${window.dataChartGraphWrapperId}${Elements.sideBySide}`, classes: 'row' })
+        .createDivChild({ id: `${window.dataChartGraphWrapperId}${Elements.graph}`, classes: 'col-sm-6' })
+        .createElement({ id: `${window.dataChartGraphWrapperId}${Elements.canvas}`, elementName: 'canvas' })
+        .createDivChild({ id: `${window.dataChartGraphWrapperId}${Elements.detailedData}`, insertId: `${window.dataChartGraphWrapperId}${Elements.sideBySide}`, classes: 'col-sm-6' })
+        .createElement({ id: `${window.dataChartGraphWrapperId}${Elements.hover_data_text}`, elementName: 'textarea', classes: 'form-control', attrs: { 'readonly': '' }, style: 'height:100vh;' });
 
     return;
 }

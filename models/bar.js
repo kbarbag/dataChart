@@ -1,37 +1,33 @@
 const { Elements } = require('../enums/enums.js');
 
-const Bar = function ({ x, y, width, height, minHeight, spacer = 0, fill = '', hover, data, text, canvasId, mouse, graphWrapperId }) {
+const Bar = function ({ x, y, width, height, minHeight, spacer = 0, fillColor, hoverColor, data, text }) {
     this.x = x;
     this.y = y;
     this.width = width;
     this.height = height;
-    this.hover = hover;
+    this.hoverColor = hoverColor;
     this.minHeight = minHeight;
     this.spacer = spacer;
-    this.fill = fill;
+    this.fillColor = fillColor;
     this.data = data;
     this.text = text;
-    this.graphWrapperId = graphWrapperId;
-    this.canvas = document.getElementById(canvasId);;
-    this.graph = this.canvas.getContext('2d');
-    this.mouse = mouse;
     return this;
 }
 
 Bar.prototype.draw = function () {
-    if (this.mouse.x >= this.x && this.mouse.x < this.x + this.width && this.mouse.y > this.y - this.minHeight && this.mouse.y < this.y + this.height + this.minHeight) {
-        this.graph.fillStyle = this.hover ? this.hover : 'orange';
-        let element = document.getElementById(`${this.graphWrapperId}${Elements.hover_data_text}`);
+    if (window.dataChartCanvasMouse.x >= this.x && window.dataChartCanvasMouse.x < this.x + this.width && window.dataChartCanvasMouse.y > this.y - this.minHeight && window.dataChartCanvasMouse.y < this.y + this.height + this.minHeight) {
+        window.dataChartGraph.fillStyle = this.hoverColor ? this.hoverColor : 'orange';
+        let element = document.getElementById(`${window.dataChartGraphWrapperId}${Elements.hover_data_text}`);
         let text = JSON.stringify(this.data, null, 2);
         element.value = text;
     } else {
-        this.graph.fillStyle = this.fill !== '' ? this.fill : 'cyan';
+        window.dataChartGraph.fillStyle = this.fillColor ? this.fillColor : 'cyan';
     }
-    this.graph.fillRect(this.x, this.y - this.minHeight, this.width, this.height + this.minHeight);
-    let textMetrics = this.graph.measureText(`${this.text}`);
-    this.graph.fillStyle = 'red';
-    this.graph.font = '1.0em Arial';
-    this.graph.fillText(`${this.text}`, this.x + (this.width / 2) - (textMetrics.width / 2), this.y - this.minHeight - 8);
+    window.dataChartGraph.fillRect(this.x, this.y - this.minHeight, this.width, this.height + this.minHeight);
+    let textMetrics = window.dataChartGraph.measureText(`${this.text}`);
+    window.dataChartGraph.fillStyle = 'red';
+    window.dataChartGraph.font = '1.0em Arial';
+    window.dataChartGraph.fillText(`${this.text}`, this.x + (this.width / 2) - (textMetrics.width / 2), this.y - this.minHeight - 8);
 }
 
 export default Bar;
