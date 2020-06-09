@@ -36,25 +36,19 @@ const hsbToRgb = function hsbToRgb(hue) {
     let r = (pR + m) * 255;
     let g = (pG + m) * 255;
     let b = (pB + m) * 255;
-    let rH = (parseInt(Math.round(r).toString(16), 16) | 88).toString(16);
-    let gH = (parseInt(Math.round(g).toString(16), 16) | 88).toString(16);
-    let bH = (parseInt(Math.round(b).toString(16), 16) | 88).toString(16);
-    // r = parseInt(Math.round(r).toString(16), 16).toString(16);
-    // g = parseInt(Math.round(g).toString(16), 16).toString(16);
-    // b = parseInt(Math.round(b).toString(16), 16).toString(16);
-    // r = '00'.substring(r.length) + r;
-    // g = '00'.substring(g.length) + g;
-    // b = '00'.substring(b.length) + b;
     let hex = '#';
-    hex += r;
-    hex += g;
-    hex += b;
+    hex += parseInt(Math.round(r).toString(16), 16).toString(16);
+    hex += parseInt(Math.round(g).toString(16), 16).toString(16);
+    hex += parseInt(Math.round(b).toString(16), 16).toString(16);
     let hover = '#';
+    let rH = (parseInt(Math.round(r).toString(16), 16) | 88).toString(16);
+    let rG = (parseInt(Math.round(g).toString(16), 16) | 88).toString(16);
+    let rB = (parseInt(Math.round(b).toString(16), 16) | 88).toString(16);
     // rH = '00'.substring(rH.length) + rH;
-    // gH = '00'.substring(gH.length) + gH;
-    // bH = '00'.substring(bH.length) + bH;
-    hover += rH + gH + bH;
-    return { hex, hover, decimal: hue, r, g, b };
+    // rG = '00'.substring(rG.length) + rH;
+    // rB = '00'.substring(rB.length) + rH;
+    hover += rH + rG + rB;
+    return { hex, hover, decimal: hue };
 }
 
 export default hsbToRgb;
