@@ -1,9 +1,12 @@
 import flatObject from './flatObject.js';
 import getNextHexColor from './hexColors.js';
+import hsbToRgb from './hsbToRgb.js';
 import HTMLBuilder from './htmlBuilder.js';
 import jsonToHTML from './jsonToHTML.js';
 
 function Utilities() { }
+
+Utilities.prototype.hsbToRgb = hsbToRgb;
 
 Utilities.prototype.jsonToHTML = jsonToHTML;
 

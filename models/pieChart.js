@@ -1,5 +1,6 @@
 import Arc from './arc.js';
 import getNextHexColor from '../utils/hexColors.js';
+import hsbToRgb from '../utils/hsbToRgb.js';
 
 const PieChart = function ({ data, spacer = 0, fill = '', stroke = '' }) {
     this.data = data;
@@ -30,8 +31,12 @@ PieChart.prototype.draw = function () {
     let startColor = 0;
     let summary = {};
     for (let [key, value] of Object.entries(groupings)) {
-        colors = getNextHexColor(startColor);
+        // colors = getNextHexColor(startColor);
+        colors = hsbToRgb(startColor);
+        console.log('colors2: ');
+        console.log(colors);
         startColor = colors.decimal;
+        console.log('start color: ', startColor);
         let groupCount = value.length;
         let groupPercent = groupCount / this.data.length;
         summary.category = window.dataChartSelectedCategory;
