@@ -11,8 +11,11 @@ window.dataChartCanvas = {};
 window.dataChartCanvas.width = window.innerWidth;
 window.dataChartCanvas.height = window.innerHeight;
 window.dataChartCanvasMouse = { x: 0, y: 0 };
+window.dataChartGraphType = 0;
 window.dataChartViewType = { val: 0, changed: false };
+window.dataChartSelectedCategory = '';
 window.dataChartCanvasRect = { left: 0, top: 0 };
+window.dataChartPieGraphIncrements = 1;
 window.dataChartGraphWrapperId = '';
 window.dataChartGraph = {};
 
@@ -25,10 +28,13 @@ window.addEventListener('mousemove', function (event) {
 
 document.addEventListener('change', function (e) {
     if (e.target && e.target.id === `${window.dataChartGraphWrapperId}${Elements.categorySelect}`) {
+        window.dataChartSelectedCategory = e.srcElement.value;
     }
     if (e.target && e.target.id === `${window.dataChartGraphWrapperId}${Elements.graphType}`) {
+        window.dataChartGraphType = parseInt(e.srcElement.value, 10);
     }
     if (e.target && e.target.id === `${window.dataChartGraphWrapperId}${Elements.increments}`) {
+        window.dataChartPieGraphIncrements = parseInt(e.srcElement.value, 10);
     }
     if (e.target && e.target.id === `${window.dataChartGraphWrapperId}${Elements.viewType}`) {
         window.dataChartViewType.val = parseInt(e.srcElement.value, 10);
@@ -66,6 +72,7 @@ let graph = function (data, graphWrapperId) {
     privateFlattenArrayOfObjects(this.data, new Set());
     privateFlattenArrayOfObjects(this.clonedData, this.categories, true);
     const categoriesIterator = this.categories[Symbol.iterator]();
+    window.dataChartSelectedCategory = categoriesIterator.next().value;
     this.graphWrapper = document.getElementById(window.dataChartGraphWrapperId);
     new SideBySide({ categories: this.categories }).create();
 
@@ -99,10 +106,12 @@ graph.prototype.draw = function () {
     let incrementsWrpr = document.getElementById(`${window.dataChartGraphWrapperId}${Elements.incrementsWrpr}`);
     let incrementsLbl = document.getElementById(`${window.dataChartGraphWrapperId}${Elements.incrementsLbl}`);
 
+    if (window.dataChartGraphType === 0) {
         let pieChart = new PieChart({ data: this.data, canvasId: `${window.dataChartGraphWrapperId}${Elements.canvas}` })
         pieChart.draw();
         incrementsWrpr.style = 'opacity: 1';
         incrementsLbl.style = 'opacity: 1';
+    } else if (window.dataChartGraphType === 1) {
         let summary = document.getElementById(`${window.dataChartGraphWrapperId}${Elements.summary}`);
         summary.style = 'opacity: 0';
         incrementsWrpr.style = 'opacity: 0';
