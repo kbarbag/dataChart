@@ -14,7 +14,8 @@ const Elements = Object.freeze({
     increments: '-increments',
     incrementsLbl: '-increments_lbl',
     incrementsWrpr: '-increments_wrpr',
-    viewType: '-view_type'
+    viewType: '-view_type',
+    colorScheme: '-color_scheme'
 });
 
 export default Elements;

@@ -2,6 +2,7 @@ import Bar from './bar.js';
 import Line from './line.js';
 
 import getNextHexColor from '../utils/hexColors.js';
+import hsbToRgb from '../utils/hsbToRgb.js';
 
 const BarGraph = function ({ data, spacer = 0, fill = '', stroke = '' }) {
     this.spacer = spacer;
@@ -61,7 +62,14 @@ BarGraph.prototype.draw = function () {
         let user = this.data[i];
         let compareData = user[window.dataChartSelectedCategory];
         let height = Math.floor((compareData / chartHeight) * (window.dataChartCanvas.height));
-        colors = getNextHexColor(startColor);
+        switch (window.dataChartColorScheme) {
+            case 0:
+                colors = hsbToRgb(startColor);
+                break;
+            default:
+                colors = getNextHexColor(startColor);
+                break;
+        }
         startColor = colors.decimal;
         let bar = new Bar({ x, y: window.dataChartCanvas.height - height - 3, width: barWidth, height, minHeight: 10, spacer, fillColor: colors.hex, hoverColor: colors.hover, data: user, text: compareData });
         bar.draw();

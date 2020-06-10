@@ -36,7 +36,9 @@ const Header = function ({ categories }) {
         .createDiv({ id: `${window.dataChartGraphWrapperId}${Elements.incrementsLbl}`, insertId: `${window.dataChartGraphWrapperId}${Elements.header}`, classes: 'col-sm-1', html: 'Increments:' })
         .createDivChild({ id: `${window.dataChartGraphWrapperId}${Elements.incrementsWrpr}`, classes: 'col-sm-1' })
         .createElement({ id: `${window.dataChartGraphWrapperId}${Elements.increments}`, classes: 'form-control', elementName: 'input', attrs: { type: 'number', min: 1, value: window.dataChartPieGraphIncrements } })
-        .createDivChild({ insertId: `${window.dataChartGraphWrapperId}${Elements.header}`, classes: 'col-sm-2 col-sm-offset-1' })
+        .createDivChild({ insertId: `${window.dataChartGraphWrapperId}${Elements.header}`, classes: 'col-sm-1' })
+        .createSelect({ id: `${window.dataChartGraphWrapperId}${Elements.colorScheme}`, classes: 'form-control', options: { 'New colors': 0, 'Old colors': 1 }, selected: window.dataChartColorScheme })
+        .createDivChild({ insertId: `${window.dataChartGraphWrapperId}${Elements.header}`, classes: 'col-sm-2' })
         .createSelect({ id: `${window.dataChartGraphWrapperId}${Elements.viewType}`, classes: 'form-control', options: { 'Side By Side': 0, 'Top Over Bottom': 1 }, selected: window.dataChartViewType.val });
     return;
 }

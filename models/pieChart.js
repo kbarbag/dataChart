@@ -31,12 +31,15 @@ PieChart.prototype.draw = function () {
     let startColor = 0;
     let summary = {};
     for (let [key, value] of Object.entries(groupings)) {
-        // colors = getNextHexColor(startColor);
-        colors = hsbToRgb(startColor);
-        console.log('colors2: ');
-        console.log(colors);
+        switch (window.dataChartColorScheme) {
+            case 0:
+                colors = hsbToRgb(startColor);
+                break;
+            default:
+                colors = getNextHexColor(startColor);
+                break;
+        }
         startColor = colors.decimal;
-        console.log('start color: ', startColor);
         let groupCount = value.length;
         let groupPercent = groupCount / this.data.length;
         summary.category = window.dataChartSelectedCategory;

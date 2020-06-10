@@ -18,6 +18,7 @@ window.dataChartCanvasRect = { left: 0, top: 0 };
 window.dataChartPieGraphIncrements = 1;
 window.dataChartGraphWrapperId = '';
 window.dataChartGraph = {};
+window.dataChartColorScheme = 0;
 
 window.addEventListener('mousemove', function (event) {
     let scaleX = window.dataChartCanvas.width / window.dataChartCanvasRect.width,
@@ -39,6 +40,9 @@ document.addEventListener('change', function (e) {
     if (e.target && e.target.id === `${window.dataChartGraphWrapperId}${Elements.viewType}`) {
         window.dataChartViewType.val = parseInt(e.srcElement.value, 10);
         window.dataChartViewType.changed = true;
+    }
+    if (e.target && e.target.id === `${window.dataChartGraphWrapperId}${Elements.colorScheme}`) {
+        window.dataChartColorScheme = parseInt(e.srcElement.value, 10);
     }
 });
 
