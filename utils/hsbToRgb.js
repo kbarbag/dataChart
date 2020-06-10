@@ -1,6 +1,6 @@
 const hsbToRgb = function hsbToRgb(hue) {
     const V = 1;
-    const V2 = 0.5;
+    const V2 = 0.7;
     const S = 1;
     hue += 30;
     if (hue === 360) hue = 0;
