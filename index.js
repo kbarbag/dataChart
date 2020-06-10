@@ -83,6 +83,22 @@ let graph = function (data, graphWrapperId) {
     return this;
 }
 
+graph.prototype.updateData = function (data) {
+    this.data = data;
+    this.clonedData = JSON.parse(JSON.stringify(data));
+    this.categories = new Set();
+    privateFlattenArrayOfObjects(this.data, new Set());
+    privateFlattenArrayOfObjects(this.clonedData, this.categories, true);
+    const categoriesIterator = this.categories[Symbol.iterator]();
+    window.dataChartSelectedCategory = categoriesIterator.next().value;
+    document.getElementById(window.dataChartGraphWrapperId).innerHTML = '';
+    if (window.dataChartViewType.val === 0) {
+        new SideBySide({ categories: this.categories }).create();
+    } else {
+        new StandardView({ categories: this.categories }).create();
+    }
+}
+
 graph.prototype.draw = function () {
     if (window.dataChartViewType.changed) {
         //clear the content before redrawing the new view type
