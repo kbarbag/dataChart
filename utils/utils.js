@@ -18,7 +18,7 @@ Utilities.prototype.flatObjectNumbers = function (obj, stack = '') {
     let returnObj = this.flatObject(obj, stack);
 
     for (let [key, value] of Object.entries(returnObj)) {
-        if ((typeof value !== 'string' || isNaN(value))) {
+        if (!(typeof value === 'number' || (typeof value === 'string' && !(isNaN(value))))) {
             delete returnObj[key];
         }
     }
